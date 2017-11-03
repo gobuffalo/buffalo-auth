@@ -1,0 +1,7 @@
+<%= if (current_user) { %>
+  <h1><%= current_user.Email %></h1>
+  <a href="/signout" data-method="DELETE">Sign Out</a>
+<% } else { %>
+  <a href="/signin" class="btn btn-primary">Sign In</a>
+  <a href="/users/new" class="btn btn-success">Register</a>
+<% } %>
