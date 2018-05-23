@@ -7,8 +7,8 @@ import (
 )
 
 var RootCmd = &cobra.Command{
-	Use:          "buffalo-goth",
-	Short:        "Generators for using Goth with Buffalo",
+	Use:          "buffalo-auth",
+	Short:        "Generators for password authentication with Buffalo",
 	SilenceUsage: true,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
