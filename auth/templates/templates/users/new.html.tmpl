@@ -1,8 +1,29 @@
-<h1>Register</h1>
+<style>
+  .auth-wrapper{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-<%= form_for(user, {action: usersPath()}) { %>
-  <%= f.InputTag("Email") %>
-  <%= f.InputTag("Password", {type: "password"}) %>
-  <%= f.InputTag("PasswordConfirmation", {type: "password"}) %>
-  <button class="btn btn-success">Register!</button>
-<% } %>
+  .auth-wrapper .sign-form{
+    max-width: 350px;
+    width: 100%;
+    padding: 0 20px;
+  }
+
+  .auth-wrapper h1{margin-bottom: 20px;}
+</style>
+  
+<div class="auth-wrapper">
+  <div class="sign-form">
+    <h1>Register</h1>
+
+    <%= form_for(user, {action: usersPath()}) { %>
+      <%= f.InputTag("Email") %>
+      <%= f.InputTag("Password", {type: "password"}) %>
+      <%= f.InputTag("PasswordConfirmation", {type: "password"}) %>
+      <button class="btn btn-success">Register!</button>
+    <% } %>
+  </div>
+</div>
