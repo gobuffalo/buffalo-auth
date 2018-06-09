@@ -1,7 +1,21 @@
-<%= if (current_user) { %>
-  <h1><%= current_user.Email %></h1>
-  <a href="/signout" data-method="DELETE">Sign Out</a>
-<% } else { %>
-  <a href="/signin" class="btn btn-primary">Sign In</a>
-  <a href="/users/new" class="btn btn-success">Register</a>
-<% } %>
+<style>
+  .auth-center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  .sign-in-btn{
+    margin-right: 10px;
+  }
+</style>
+
+<div class="auth-center">
+  <%= if (current_user) { %>
+    <h1><%= current_user.Email %></h1>
+    <a href="/signout" data-method="DELETE">Sign Out</a>
+  <% } else { %>
+    <a href="/signin" class="btn btn-primary">Sign In</a>
+    <a href="/users/new" class="btn btn-success">Register</a>
+  <% } %>
+</div>
