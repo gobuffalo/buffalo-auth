@@ -56,8 +56,8 @@ func AuthCreate(c buffalo.Context) error {
 	c.Flash().Add("success", "Welcome Back to Buffalo!")
 
 	redirectURL := "/"
-	if c.Session().Get("redirectURL") != nil {
-		redirectURL = c.Session().Get("redirectURL").(string)
+	if redir, ok := c.Session().Get("redirectURL").(string); ok {
+		redirectURL = redir
 	}
 
 	return c.Redirect(302, redirectURL)
