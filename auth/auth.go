@@ -2,6 +2,7 @@ package auth
 
 import (
 	"os/exec"
+	"strings"
 
 	"github.com/gobuffalo/buffalo/generators"
 	"github.com/gobuffalo/makr"
@@ -19,6 +20,10 @@ func New() (*makr.Generator, error) {
 	g.Add(makr.NewCommand(exec.Command("buffalo", "db", "generate", "model", "user", "email", "password_hash")))
 
 	for _, f := range files {
+		if f.WritePath == "models/user.go" {
+			continue
+		}
+
 		g.Add(makr.NewFile(f.WritePath, f.Body))
 	}
 
@@ -37,7 +42,78 @@ func New() (*makr.Generator, error) {
 			)
 		},
 	})
-	g.Add(makr.NewCommand(makr.GoGet("github.com/markbates/goth/...")))
+
+	g.Add(&makr.Func{
+		Should: func(data makr.Data) bool { return true },
+		Runner: func(root string, data makr.Data) error {
+			sm := NewSourceManipulator("models/user.go")
+			sm.InsertBeforeBlockEnd("type User struct {", []string{
+				"Password string `json:\"-\" db:\"-\"`",
+				"PasswordConfirmation string `json:\"-\" db:\"-\"`",
+			})
+
+			return nil
+		},
+	})
+
+	g.Add(&makr.Func{
+		Should: func(data makr.Data) bool { return true },
+		Runner: func(root string, data makr.Data) error {
+			sm := NewSourceManipulator("models/user.go")
+			sm.InsertInBlock("func (u *User) ValidateCreate(tx *pop.Connection) (*validate.Errors, error) {", strings.Split(`
+				var err error
+				return validate.Validate(
+					&validators.StringIsPresent{Field: u.Password, Name: "Password"},
+					&validators.StringsMatch{Name: "Password", Field: u.Password, Field2: u.PasswordConfirmation, Message: "Password does not match confirmation"},
+				), err
+			`, "\n"))
+
+			sm.InsertInBlock("func (u *User) Validate(tx *pop.Connection) (*validate.Errors, error) {", strings.Split(`
+				var err error
+				return validate.Validate(
+					&validators.StringIsPresent{Field: u.Email, Name: "Email"},
+					&validators.StringIsPresent{Field: u.PasswordHash, Name: "PasswordHash"},
+					// check to see if the email address is already taken:
+					&validators.FuncValidator{
+						Field:   u.Email,
+						Name:    "Email",
+						Message: "%s is already taken",
+						Fn: func() bool {
+							var b bool
+							q := tx.Where("email = ?", u.Email)
+							if u.ID != uuid.Nil {
+								q = q.Where("id != ?", u.ID)
+							}
+							b, err = q.Exists(u)
+							if err != nil {
+								return false
+							}
+							return !b
+						},
+					},
+				), err
+			`, "\n"))
+
+			sm.Append(strings.Split(`
+				// Create wraps up the pattern of encrypting the password and
+				// running validations. Useful when writing tests.
+				func (u *User) Create(tx *pop.Connection) (*validate.Errors, error) {
+					u.Email = strings.ToLower(u.Email)
+					ph, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
+					if err != nil {
+						return validate.NewErrors(), errors.WithStack(err)
+					}
+					u.PasswordHash = string(ph)
+					return tx.ValidateAndCreate(u)
+				}
+
+			`, "\n"))
+
+			sm.AddImports("\"strings\"", "\"github.com/pkg/errors\"", "\"golang.org/x/crypto/bcrypt\"")
+			return nil
+		},
+	})
+
 	g.Fmt(".")
 	return g, nil
 }
