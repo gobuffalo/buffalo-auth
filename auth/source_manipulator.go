@@ -21,6 +21,7 @@ func NewSourceManipulator(filePath string) *SourceManipulator {
 	return &SourceManipulator{filePath}
 }
 
+//AddImports allows to add imports to a .go file
 func (sm *SourceManipulator) AddImports(im ...string) error {
 	src, err := ioutil.ReadFile(sm.filePath)
 	if err != nil {
@@ -52,6 +53,7 @@ func (sm *SourceManipulator) AddImports(im ...string) error {
 	return err
 }
 
+//Append appends to a source file
 func (sm *SourceManipulator) Append(content []string) error {
 	src, err := ioutil.ReadFile(sm.filePath)
 	if err != nil {
@@ -68,6 +70,7 @@ func (sm *SourceManipulator) Append(content []string) error {
 	return err
 }
 
+//RemoveLine removes a line starting with some passed code
 func (sm *SourceManipulator) RemoveLine(starting string) error {
 	src, err := ioutil.ReadFile(sm.filePath)
 	if err != nil {
@@ -94,6 +97,7 @@ func (sm *SourceManipulator) RemoveLine(starting string) error {
 	return err
 }
 
+//RemoveBlock removes a block starting with passed expression
 func (sm *SourceManipulator) RemoveBlock(starting string) error {
 	start, end, err := sm.FindBlockFor(starting)
 	if err != nil {
@@ -117,6 +121,7 @@ func (sm *SourceManipulator) RemoveBlock(starting string) error {
 	return err
 }
 
+//InsertInBlock replaces block body starting with string
 func (sm *SourceManipulator) InsertInBlock(starting string, content []string) error {
 	start, end, err := sm.FindBlockFor(starting)
 	if err != nil {
@@ -142,6 +147,7 @@ func (sm *SourceManipulator) InsertInBlock(starting string, content []string) er
 	return err
 }
 
+//InsertBeforeBlockEnd adds source before block ends
 func (sm *SourceManipulator) InsertBeforeBlockEnd(startingExpr string, content []string) error {
 	_, end, err := sm.FindBlockFor(startingExpr)
 	if err != nil {
@@ -161,6 +167,7 @@ func (sm *SourceManipulator) InsertBeforeBlockEnd(startingExpr string, content [
 	return err
 }
 
+//FindBlockFor finds a block line start and end
 func (sm *SourceManipulator) FindBlockFor(startingExpr string) (int, int, error) {
 	end, start := -1, -1
 
