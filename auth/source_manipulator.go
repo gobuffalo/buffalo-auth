@@ -7,7 +7,6 @@ import (
 	"go/parser"
 	"go/token"
 	"io/ioutil"
-	"log"
 	"strings"
 )
 
@@ -63,8 +62,6 @@ func (sm *SourceManipulator) Append(content []string) error {
 	lines := strings.Split(string(src), "\n")
 	c := append(lines, content...)
 	fileContent := strings.Join(c, "\n")
-
-	log.Println(fileContent)
 
 	err = ioutil.WriteFile(sm.filePath, []byte(fileContent), 0755)
 	return err
@@ -140,8 +137,6 @@ func (sm *SourceManipulator) InsertInBlock(starting string, content []string) er
 	lines := strings.Split(string(src), "\n")
 	c := append(lines[:start], append(content, lines[end-1:]...)...)
 	fileContent := strings.Join(c, "\n")
-
-	log.Println(fileContent)
 
 	err = ioutil.WriteFile(sm.filePath, []byte(fileContent), 0755)
 	return err

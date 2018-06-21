@@ -1,6 +1,9 @@
 FROM gobuffalo/buffalo:v0.12.0
 
+RUN rm -rf $GOPATH/src/github.com/gobuffalo/buffalo-auth
 ADD . $GOPATH/src/github.com/gobuffalo/buffalo-auth
+
+RUN ls $GOPATH/src/github.com/gobuffalo/buffalo-auth/auth/templates/models
 WORKDIR $GOPATH/src/github.com/gobuffalo/buffalo-auth
 RUN go install -v
 
