@@ -20,10 +20,6 @@ func New() (*makr.Generator, error) {
 	g.Add(makr.NewCommand(exec.Command("buffalo", "db", "generate", "model", "user", "email", "password_hash")))
 
 	for _, f := range files {
-		if f.WritePath == "models/user.go" {
-			continue
-		}
-
 		g.Add(makr.NewFile(f.WritePath, f.Body))
 	}
 
