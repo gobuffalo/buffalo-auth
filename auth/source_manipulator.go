@@ -11,10 +11,12 @@ import (
 	"strings"
 )
 
+//SourceManipulator has helper classes to modify go source code
 type SourceManipulator struct {
 	filePath string
 }
 
+//NewSourceManipulator creates a SourceManipulator from a provided file
 func NewSourceManipulator(filePath string) *SourceManipulator {
 	return &SourceManipulator{filePath}
 }
