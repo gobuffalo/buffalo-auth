@@ -19,7 +19,9 @@ func New(args []string) (*makr.Generator, error) {
 
 	fields := []string{"user", "email", "password_hash"}
 	for _, field := range args {
-		if strings.Contains(strings.Join(fields, "\n"), field) {
+
+		fieldName := strings.Split(field, ":")[0]
+		if strings.Contains(strings.Join(fields, "\n"), fieldName) {
 			continue
 		}
 
