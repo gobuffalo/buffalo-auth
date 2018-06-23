@@ -16,9 +16,9 @@ RUN buffalo db migrate
 RUN buffalo test -v ./...
 
 WORKDIR $GOPATH/src
-RUN buffalo new --db-type=sqlite3 --skip-webpack other
-WORKDIR ./other
-RUN buffalo g auth first_name last_name phone_number
+RUN buffalo new --db-type=sqlite3 --skip-webpack -f aditional_fields
+WORKDIR ./aditional_fields
+RUN buffalo g auth first_name last_name phone_number email
 RUN buffalo db migrate
 RUN buffalo test -v ./...
 RUN filetest -c $GOPATH/src/github.com/gobuffalo/buffalo-auth/filetests/aditional_fields.json

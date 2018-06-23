@@ -17,7 +17,16 @@ func New(args []string) (*makr.Generator, error) {
 		return nil, err
 	}
 
-	commandParts := append([]string{"db", "generate", "model", "user", "email", "password_hash"}, args...)
+	fields := []string{"user", "email", "password_hash"}
+	for _, field := range args {
+		if strings.Contains(strings.Join(fields, "\n"), field) {
+			continue
+		}
+
+		fields = append(fields, field)
+	}
+
+	commandParts := append([]string{"db", "generate", "model"}, fields...)
 	g.Add(makr.NewCommand(exec.Command("buffalo", commandParts...)))
 
 	for _, f := range files {
@@ -43,7 +52,7 @@ func New(args []string) (*makr.Generator, error) {
 	g.Add(&makr.Func{
 		Should: func(data makr.Data) bool { return true },
 		Runner: func(root string, data makr.Data) error {
-			sm := NewSourceManipulator("models/user.go")
+			sm := NewSourceOperator("models/user.go")
 			sm.InsertBeforeBlockEnd("type User struct {", []string{
 				"Password string `json:\"-\" db:\"-\"`",
 				"PasswordConfirmation string `json:\"-\" db:\"-\"`",
@@ -56,7 +65,7 @@ func New(args []string) (*makr.Generator, error) {
 	g.Add(&makr.Func{
 		Should: func(data makr.Data) bool { return true },
 		Runner: func(root string, data makr.Data) error {
-			sm := NewSourceManipulator("models/user.go")
+			sm := NewSourceOperator("models/user.go")
 			sm.InsertInBlock("func (u *User) ValidateCreate(tx *pop.Connection) (*validate.Errors, error) {", strings.Split(`
 				var err error
 				return validate.Validate(

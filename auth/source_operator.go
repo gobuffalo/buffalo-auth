@@ -10,18 +10,18 @@ import (
 	"strings"
 )
 
-//SourceManipulator has helper classes to modify go source code
-type SourceManipulator struct {
+//SourceOperator has helper classes to modify go source code
+type SourceOperator struct {
 	filePath string
 }
 
-//NewSourceManipulator creates a SourceManipulator from a provided file
-func NewSourceManipulator(filePath string) *SourceManipulator {
-	return &SourceManipulator{filePath}
+//NewSourceOperator creates a SourceManipulator from a provided file
+func NewSourceOperator(filePath string) *SourceOperator {
+	return &SourceOperator{filePath}
 }
 
 //AddImports allows to add imports to a .go file
-func (sm *SourceManipulator) AddImports(im ...string) error {
+func (sm *SourceOperator) AddImports(im ...string) error {
 	src, err := ioutil.ReadFile(sm.filePath)
 	if err != nil {
 		return err
@@ -53,7 +53,7 @@ func (sm *SourceManipulator) AddImports(im ...string) error {
 }
 
 //Append appends to a source file
-func (sm *SourceManipulator) Append(content []string) error {
+func (sm *SourceOperator) Append(content []string) error {
 	src, err := ioutil.ReadFile(sm.filePath)
 	if err != nil {
 		return err
@@ -68,7 +68,7 @@ func (sm *SourceManipulator) Append(content []string) error {
 }
 
 //RemoveLine removes a line starting with some passed code
-func (sm *SourceManipulator) RemoveLine(starting string) error {
+func (sm *SourceOperator) RemoveLine(starting string) error {
 	src, err := ioutil.ReadFile(sm.filePath)
 	if err != nil {
 		return err
@@ -95,7 +95,7 @@ func (sm *SourceManipulator) RemoveLine(starting string) error {
 }
 
 //RemoveBlock removes a block starting with passed expression
-func (sm *SourceManipulator) RemoveBlock(starting string) error {
+func (sm *SourceOperator) RemoveBlock(starting string) error {
 	start, end, err := sm.FindBlockFor(starting)
 	if err != nil {
 		return err
@@ -119,7 +119,7 @@ func (sm *SourceManipulator) RemoveBlock(starting string) error {
 }
 
 //InsertInBlock replaces block body starting with string
-func (sm *SourceManipulator) InsertInBlock(starting string, content []string) error {
+func (sm *SourceOperator) InsertInBlock(starting string, content []string) error {
 	start, end, err := sm.FindBlockFor(starting)
 	if err != nil {
 		return err
@@ -143,7 +143,7 @@ func (sm *SourceManipulator) InsertInBlock(starting string, content []string) er
 }
 
 //InsertBeforeBlockEnd adds source before block ends
-func (sm *SourceManipulator) InsertBeforeBlockEnd(startingExpr string, content []string) error {
+func (sm *SourceOperator) InsertBeforeBlockEnd(startingExpr string, content []string) error {
 	_, end, err := sm.FindBlockFor(startingExpr)
 	if err != nil {
 		return err
@@ -163,7 +163,7 @@ func (sm *SourceManipulator) InsertBeforeBlockEnd(startingExpr string, content [
 }
 
 //FindBlockFor finds a block line start and end
-func (sm *SourceManipulator) FindBlockFor(startingExpr string) (int, int, error) {
+func (sm *SourceOperator) FindBlockFor(startingExpr string) (int, int, error) {
 	end, start := -1, -1
 
 	src, err := ioutil.ReadFile(sm.filePath)
