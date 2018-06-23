@@ -10,14 +10,15 @@ import (
 )
 
 // New actions/auth.go file configured to the specified providers.
-func New() (*makr.Generator, error) {
+func New(args []string) (*makr.Generator, error) {
 	g := makr.New()
 	files, err := generators.FindByBox(packr.NewBox("../auth/templates"))
 	if err != nil {
 		return nil, err
 	}
 
-	g.Add(makr.NewCommand(exec.Command("buffalo", "db", "generate", "model", "user", "email", "password_hash")))
+	commandParts := append([]string{"db", "generate", "model", "user", "email", "password_hash"}, args...)
+	g.Add(makr.NewCommand(exec.Command("buffalo", commandParts...)))
 
 	for _, f := range files {
 		g.Add(makr.NewFile(f.WritePath, f.Body))

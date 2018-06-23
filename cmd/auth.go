@@ -23,7 +23,7 @@ var authCmd = &cobra.Command{
 			return errors.WithStack(err)
 		}
 
-		g, err := auth.New()
+		g, err := auth.New(args)
 		if err != nil {
 			return err
 		}
