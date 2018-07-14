@@ -67,6 +67,33 @@ func (sm *SourceOperator) Append(content []string) error {
 	return err
 }
 
+//AppendAfter Adds code after referenced code
+func (sm *SourceOperator) AppendAfter(reference string, source []string) error {
+	src, err := ioutil.ReadFile(sm.filePath)
+	if err != nil {
+		return err
+	}
+
+	lines := strings.Split(string(src), "\n")
+	lineNumber := -1
+	for num, line := range lines {
+		if !strings.Contains(line, reference) {
+			continue
+		}
+
+		lineNumber = num
+		break
+	}
+
+	if lineNumber != -1 {
+		lines = append(lines[:lineNumber], append(source, lines[lineNumber:]...)...)
+	}
+
+	fileContent := strings.Join(lines, "\n")
+	err = ioutil.WriteFile(sm.filePath, []byte(fileContent), 0755)
+	return err
+}
+
 //RemoveLine removes a line starting with some passed code
 func (sm *SourceOperator) RemoveLine(starting string) error {
 	src, err := ioutil.ReadFile(sm.filePath)

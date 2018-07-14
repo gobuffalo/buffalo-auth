@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"os/exec"
 	"strings"
 
@@ -18,6 +19,7 @@ func New(args []string) (*makr.Generator, error) {
 	}
 
 	fields := []string{"user", "email", "password_hash"}
+	extraFields := []string{}
 	for _, field := range args {
 
 		fieldName := strings.Split(field, ":")[0]
@@ -26,6 +28,7 @@ func New(args []string) (*makr.Generator, error) {
 		}
 
 		fields = append(fields, field)
+		extraFields = append(extraFields, field)
 	}
 
 	commandParts := append([]string{"db", "generate", "model"}, fields...)
@@ -34,6 +37,22 @@ func New(args []string) (*makr.Generator, error) {
 	for _, f := range files {
 		g.Add(makr.NewFile(f.WritePath, f.Body))
 	}
+
+	g.Add(&makr.Func{
+		Should: func(data makr.Data) bool { return true },
+		Runner: func(root string, data makr.Data) error {
+
+			fieldInputs := []string{}
+			for _, field := range extraFields {
+				fieldInputs = append(fieldInputs, fmt.Sprintf(`<%= f.InputField("%v", {})`, field))
+			}
+
+			sm := NewSourceOperator("templates/users/new.html")
+			sm.AppendAfter(`<%= f.InputTag("PasswordConfirmation", {type: "password"}) %>`, fieldInputs)
+
+			return nil
+		},
+	})
 
 	g.Add(&makr.Func{
 		Should: func(data makr.Data) bool { return true },
