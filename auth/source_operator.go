@@ -81,7 +81,7 @@ func (sm *SourceOperator) AppendAfter(reference string, source []string) error {
 			continue
 		}
 
-		lineNumber = num
+		lineNumber = num + 1
 		break
 	}
 

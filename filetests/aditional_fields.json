@@ -6,4 +6,11 @@
       "LastName",
       "PhoneNumber"
     ]
+},{
+  "path": "templates/users/new.html",
+  "contains": [
+    "<%= f.InputTag(\"FirstName\", {}) %>",
+    "<%= f.InputTag(\"LastName\", {}) %>",
+    "<%= f.InputTag(\"PhoneNumber\", {}) %>"
+  ]
 }]

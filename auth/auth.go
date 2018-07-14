@@ -8,6 +8,7 @@ import (
 	"github.com/gobuffalo/buffalo/generators"
 	"github.com/gobuffalo/makr"
 	"github.com/gobuffalo/packr"
+	"github.com/markbates/inflect"
 )
 
 // New actions/auth.go file configured to the specified providers.
@@ -44,7 +45,8 @@ func New(args []string) (*makr.Generator, error) {
 
 			fieldInputs := []string{}
 			for _, field := range extraFields {
-				fieldInputs = append(fieldInputs, fmt.Sprintf(`<%= f.InputField("%v", {})`, field))
+				name := inflect.Camelize(field)
+				fieldInputs = append(fieldInputs, fmt.Sprintf(`<%%= f.InputTag("%v", {}) %%>`, name))
 			}
 
 			sm := NewSourceOperator("templates/users/new.html")
