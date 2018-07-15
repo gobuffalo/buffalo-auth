@@ -5,6 +5,7 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/gobuffalo/buffalo-auth/transformer"
 	"github.com/gobuffalo/buffalo/generators"
 	"github.com/gobuffalo/makr"
 	"github.com/gobuffalo/packr"
@@ -49,8 +50,8 @@ func New(args []string) (*makr.Generator, error) {
 				fieldInputs = append(fieldInputs, fmt.Sprintf(`<%%= f.InputTag("%v", {}) %%>`, name))
 			}
 
-			sm := NewSourceOperator("templates/users/new.html")
-			sm.AppendAfter(`<%= f.InputTag("PasswordConfirmation", {type: "password"}) %>`, fieldInputs)
+			tr := transformer.NewTransformer("templates/users/new.html")
+			tr.AppendAfter(`<%= f.InputTag("PasswordConfirmation", {type: "password"}) %>`, fieldInputs)
 
 			return nil
 		},
@@ -75,8 +76,8 @@ func New(args []string) (*makr.Generator, error) {
 	g.Add(&makr.Func{
 		Should: func(data makr.Data) bool { return true },
 		Runner: func(root string, data makr.Data) error {
-			sm := NewSourceOperator("models/user.go")
-			sm.InsertBeforeBlockEnd("type User struct {", []string{
+			tr := transformer.NewTransformer("models/user.go")
+			tr.InsertBeforeBlockEnd("type User struct {", []string{
 				"Password string `json:\"-\" db:\"-\"`",
 				"PasswordConfirmation string `json:\"-\" db:\"-\"`",
 			})
@@ -88,8 +89,8 @@ func New(args []string) (*makr.Generator, error) {
 	g.Add(&makr.Func{
 		Should: func(data makr.Data) bool { return true },
 		Runner: func(root string, data makr.Data) error {
-			sm := NewSourceOperator("models/user.go")
-			sm.InsertInBlock("func (u *User) ValidateCreate(tx *pop.Connection) (*validate.Errors, error) {", strings.Split(`
+			tr := transformer.NewTransformer("models/user.go")
+			tr.InsertInBlock("func (u *User) ValidateCreate(tx *pop.Connection) (*validate.Errors, error) {", strings.Split(`
 				var err error
 				return validate.Validate(
 					&validators.StringIsPresent{Field: u.Password, Name: "Password"},
@@ -97,7 +98,7 @@ func New(args []string) (*makr.Generator, error) {
 				), err
 			`, "\n"))
 
-			sm.InsertInBlock("func (u *User) Validate(tx *pop.Connection) (*validate.Errors, error) {", strings.Split(`
+			tr.InsertInBlock("func (u *User) Validate(tx *pop.Connection) (*validate.Errors, error) {", strings.Split(`
 				var err error
 				return validate.Validate(
 					&validators.StringIsPresent{Field: u.Email, Name: "Email"},
@@ -123,7 +124,7 @@ func New(args []string) (*makr.Generator, error) {
 				), err
 			`, "\n"))
 
-			sm.Append(strings.Split(`
+			tr.Append(strings.Split(`
 				// Create wraps up the pattern of encrypting the password and
 				// running validations. Useful when writing tests.
 				func (u *User) Create(tx *pop.Connection) (*validate.Errors, error) {
@@ -138,7 +139,7 @@ func New(args []string) (*makr.Generator, error) {
 
 			`, "\n"))
 
-			sm.AddImports("\"strings\"", "\"github.com/pkg/errors\"", "\"golang.org/x/crypto/bcrypt\"")
+			tr.AddImports("\"strings\"", "\"github.com/pkg/errors\"", "\"golang.org/x/crypto/bcrypt\"")
 			return nil
 		},
 	})
