@@ -7,17 +7,21 @@ import (
 	"go/parser"
 	"go/token"
 	"io/ioutil"
+	"os"
 	"strings"
 )
 
 //Transformer has helper classes to modify go source code
 type Transformer struct {
 	filePath string
+	file     os.File
 }
 
 //NewTransformer creates a SourceManipulator from a provided file
-func NewTransformer(filePath string) *Transformer {
-	return &Transformer{filePath}
+func NewTransformer(path string) *Transformer {
+	return &Transformer{
+		filePath: path,
+	}
 }
 
 //AddImports allows to add imports to a .go file
@@ -33,8 +37,7 @@ func (tr *Transformer) AddImports(im ...string) error {
 		return err
 	}
 
-	var end = -1
-
+	var end = 1
 	ast.Inspect(f, func(n ast.Node) bool {
 		switch x := n.(type) {
 		case *ast.ImportSpec:

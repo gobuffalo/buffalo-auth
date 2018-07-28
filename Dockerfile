@@ -5,6 +5,7 @@ ADD . $GOPATH/src/github.com/gobuffalo/buffalo-auth
 
 WORKDIR $GOPATH/src/github.com/gobuffalo/buffalo-auth
 RUN go install -v
+RUN go test -v ./...
 
 WORKDIR $GOPATH/src
 
