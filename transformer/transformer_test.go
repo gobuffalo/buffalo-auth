@@ -13,26 +13,16 @@ func Test_Transformer_AddImports(t *testing.T) {
 	r := require.New(t)
 
 	tcases := []struct {
-		inGolden  string
-		adition   string
-		outGolden string
+		goldensPrefix string
+		adition       string
 	}{
-		{
-			"imports-1-in.golden",
-			`import "github.com/wawandco/fako"`,
-			"imports-1-out.golden",
-		},
-
-		{
-			"imports-2-in.golden",
-			`import "github.com/wawandco/fako"`,
-			"imports-2-out.golden",
-		},
+		{"imports-1", `import "github.com/wawandco/fako"`},
+		{"imports-2", `import "github.com/wawandco/fako"`},
 	}
 
 	for _, tcase := range tcases {
 
-		base, err := ioutil.ReadFile(filepath.Join("testdata", tcase.inGolden))
+		base, err := ioutil.ReadFile(filepath.Join("testdata", tcase.goldensPrefix+"-in.golden"))
 		r.NoError(err)
 
 		tmp := os.TempDir()
@@ -45,7 +35,7 @@ func Test_Transformer_AddImports(t *testing.T) {
 		src, err := ioutil.ReadFile(path)
 		r.NoError(err)
 
-		expected, err := ioutil.ReadFile(filepath.Join("testdata", tcase.outGolden))
+		expected, err := ioutil.ReadFile(filepath.Join("testdata", tcase.goldensPrefix+"-out.golden"))
 		r.NoError(err)
 
 		r.Equal(src, expected)
