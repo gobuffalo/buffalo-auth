@@ -14,10 +14,10 @@ func Test_Transformer_AddImports(t *testing.T) {
 
 	tcases := []struct {
 		goldensPrefix string
-		adition       string
+		adition       []string
 	}{
-		{"imports-1", `import "github.com/wawandco/fako"`},
-		{"imports-2", `import "github.com/wawandco/fako"`},
+		{"imports-1", []string{`import "github.com/wawandco/fako"`}},
+		{"imports-2", []string{`import "github.com/wawandco/fako"`, `import "other/package"`}},
 	}
 
 	for _, tcase := range tcases {
@@ -30,7 +30,7 @@ func Test_Transformer_AddImports(t *testing.T) {
 		ioutil.WriteFile(path, []byte(base), 0644)
 
 		tr := NewTransformer(path)
-		r.NoError(tr.AddImports(tcase.adition))
+		r.NoError(tr.AddImports(tcase.adition...))
 
 		src, err := ioutil.ReadFile(path)
 		r.NoError(err)
@@ -38,7 +38,7 @@ func Test_Transformer_AddImports(t *testing.T) {
 		expected, err := ioutil.ReadFile(filepath.Join("testdata", tcase.goldensPrefix+"-out.golden"))
 		r.NoError(err)
 
-		r.Equal(src, expected)
+		r.Equal(string(src), string(expected))
 	}
 
 }
