@@ -151,8 +151,8 @@ func (tr *Transformer) RemoveBlock(starting string) error {
 	return err
 }
 
-//InsertInBlock replaces block body starting with string
-func (tr *Transformer) InsertInBlock(starting string, content ...string) error {
+//SetBlockBody replaces block body starting with string
+func (tr *Transformer) SetBlockBody(starting string, content ...string) error {
 	start, end, err := tr.FindBlockFor(starting)
 	if err != nil {
 		return err
@@ -175,8 +175,8 @@ func (tr *Transformer) InsertInBlock(starting string, content ...string) error {
 	return err
 }
 
-//InsertBeforeBlockEnd adds source before block ends
-func (tr *Transformer) InsertBeforeBlockEnd(startingExpr string, content []string) error {
+//AppendToBlock adds source before block ends
+func (tr *Transformer) AppendToBlock(startingExpr string, content []string) error {
 	_, end, err := tr.FindBlockFor(startingExpr)
 	if err != nil {
 		return err

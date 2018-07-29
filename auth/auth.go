@@ -77,7 +77,7 @@ func New(args []string) (*makr.Generator, error) {
 		Should: func(data makr.Data) bool { return true },
 		Runner: func(root string, data makr.Data) error {
 			tr := transformer.NewTransformer("models/user.go")
-			tr.InsertBeforeBlockEnd("type User struct {", []string{
+			tr.AppendToBlock("type User struct {", []string{
 				"Password string `json:\"-\" db:\"-\"`",
 				"PasswordConfirmation string `json:\"-\" db:\"-\"`",
 			})
@@ -90,7 +90,7 @@ func New(args []string) (*makr.Generator, error) {
 		Should: func(data makr.Data) bool { return true },
 		Runner: func(root string, data makr.Data) error {
 			tr := transformer.NewTransformer("models/user.go")
-			tr.InsertInBlock("func (u *User) ValidateCreate(tx *pop.Connection) (*validate.Errors, error) {", `
+			tr.SetBlockBody("func (u *User) ValidateCreate(tx *pop.Connection) (*validate.Errors, error) {", `
 				var err error
 				return validate.Validate(
 					&validators.StringIsPresent{Field: u.Password, Name: "Password"},
@@ -98,7 +98,7 @@ func New(args []string) (*makr.Generator, error) {
 				), err
 			`)
 
-			tr.InsertInBlock("func (u *User) Validate(tx *pop.Connection) (*validate.Errors, error) {", `
+			tr.SetBlockBody("func (u *User) Validate(tx *pop.Connection) (*validate.Errors, error) {", `
 				var err error
 				return validate.Validate(
 					&validators.StringIsPresent{Field: u.Email, Name: "Email"},

@@ -99,7 +99,7 @@ func Test_Transformer_RemoveBlock(t *testing.T) {
 
 }
 
-func Test_Transformer_InsertInBlock(t *testing.T) {
+func Test_Transformer_SetBlockBody(t *testing.T) {
 	r := require.New(t)
 
 	tcases := []struct {
@@ -112,7 +112,7 @@ func Test_Transformer_InsertInBlock(t *testing.T) {
 
 	for _, tcase := range tcases {
 		expected, result, err := matchesAfter(tcase.goldensPrefix, func(tr *Transformer) {
-			r.NoError(tr.InsertInBlock(tcase.blockStart, tcase.content))
+			r.NoError(tr.SetBlockBody(tcase.blockStart, tcase.content))
 		})
 
 		r.NoError(err)
