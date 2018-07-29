@@ -51,7 +51,7 @@ func New(args []string) (*makr.Generator, error) {
 			}
 
 			tr := transformer.NewTransformer("templates/users/new.html")
-			tr.AppendAfter(`<%= f.InputTag("PasswordConfirmation", {type: "password"}) %>`, fieldInputs)
+			tr.AppendAfter(`<%= f.InputTag("PasswordConfirmation", {type: "password"}) %>`, fieldInputs...)
 
 			return nil
 		},

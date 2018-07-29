@@ -71,13 +71,14 @@ func (tr *Transformer) Append(src string) error {
 }
 
 //AppendAfter Adds code after referenced code
-func (tr *Transformer) AppendAfter(reference string, source []string) error {
-	src, err := ioutil.ReadFile(tr.filePath)
+func (tr *Transformer) AppendAfter(reference string, source ...string) error {
+
+	content, err := ioutil.ReadFile(tr.filePath)
 	if err != nil {
 		return err
 	}
 
-	lines := strings.Split(string(src), "\n")
+	lines := strings.Split(string(content), "\n")
 	lineNumber := -1
 	for num, line := range lines {
 		if !strings.Contains(line, reference) {

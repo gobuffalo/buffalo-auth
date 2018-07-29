@@ -22,12 +22,12 @@ func Test_Transformer_AddImports(t *testing.T) {
 
 	for _, tcase := range tcases {
 
-		matches, err := matchesAfter(tcase.goldensPrefix, func(tr *Transformer) {
+		expected, result, err := matchesAfter(tcase.goldensPrefix, func(tr *Transformer) {
 			r.NoError(tr.AddImports(tcase.adition))
 		})
 
 		r.NoError(err)
-		r.True(matches)
+		r.Equal(expected, result)
 	}
 
 }
@@ -44,20 +44,43 @@ func Test_Transformer_Append(t *testing.T) {
 	}
 
 	for _, tcase := range tcases {
-		matches, err := matchesAfter(tcase.goldensPrefix, func(tr *Transformer) {
+		expected, result, err := matchesAfter(tcase.goldensPrefix, func(tr *Transformer) {
 			r.NoError(tr.Append(tcase.source))
 		})
 
 		r.NoError(err)
-		r.True(matches)
+		r.Equal(expected, result)
 	}
 
 }
 
-func matchesAfter(prefix string, fn func(tr *Transformer)) (bool, error) {
+func Test_Transformer_AppendAfterSource(t *testing.T) {
+	r := require.New(t)
+
+	tcases := []struct {
+		goldensPrefix string
+		after         string
+		source        string
+	}{
+		{"append-after-1", `c.Flash().Add("success", "Welcome to Buffalo!")`, `c.Flash().Add("warning", "[Warning] Once you get into it, will be hard to leave!")`},
+		{"append-after-2", `c.Flash().Add("success", "Welcome to Buffalo!")`, "c.Flash().Add(\"warning\", \"[Warning] Once you get into it, will be hard to leave!\")\nc.Logger().Info(\"Hello\")"},
+	}
+
+	for _, tcase := range tcases {
+		expected, result, err := matchesAfter(tcase.goldensPrefix, func(tr *Transformer) {
+			r.NoError(tr.AppendAfter(tcase.after, tcase.source))
+		})
+
+		r.NoError(err)
+		r.Equal(expected, result)
+	}
+
+}
+
+func matchesAfter(prefix string, fn func(tr *Transformer)) (string, string, error) {
 	base, err := ioutil.ReadFile(filepath.Join("testdata", prefix+"-in.golden"))
 	if err != nil {
-		return false, err
+		return "", "", err
 	}
 
 	tmp := os.TempDir()
@@ -69,13 +92,13 @@ func matchesAfter(prefix string, fn func(tr *Transformer)) (bool, error) {
 
 	src, err := ioutil.ReadFile(path)
 	if err != nil {
-		return false, err
+		return "", "", err
 	}
 
 	expected, err := ioutil.ReadFile(filepath.Join("testdata", prefix+"-out.golden"))
 	if err != nil {
-		return false, err
+		return "", "", err
 	}
 
-	return string(src) == string(expected), nil
+	return string(src), string(expected), nil
 }
