@@ -25,14 +25,14 @@ func NewTransformer(path string) *Transformer {
 }
 
 //AddImports allows to add imports to a .go file
-func (tr *Transformer) AddImports(im ...string) error {
-	src, err := ioutil.ReadFile(tr.filePath)
+func (tr *Transformer) AddImports(imports ...string) error {
+	content, err := ioutil.ReadFile(tr.filePath)
 	if err != nil {
 		return err
 	}
 
 	fset := token.NewFileSet()
-	f, err := parser.ParseFile(fset, tr.filePath, string(src), 0)
+	f, err := parser.ParseFile(fset, tr.filePath, string(content), 0)
 	if err != nil {
 		return err
 	}
@@ -47,23 +47,23 @@ func (tr *Transformer) AddImports(im ...string) error {
 		return true
 	})
 
-	lines := strings.Split(string(src), "\n")
-	c := append(lines[:end], append(im, lines[end:]...)...)
+	lines := strings.Split(string(content), "\n")
+	c := append(lines[:end], append(imports, lines[end:]...)...)
 	fileContent := strings.Join(c, "\n")
 
 	err = ioutil.WriteFile(tr.filePath, []byte(fileContent), 0755)
 	return err
 }
 
-//Append appends to a source file
-func (tr *Transformer) Append(content []string) error {
-	src, err := ioutil.ReadFile(tr.filePath)
+//Append appends at the bottom of the source file
+func (tr *Transformer) Append(src string) error {
+	content, err := ioutil.ReadFile(tr.filePath)
 	if err != nil {
 		return err
 	}
 
-	lines := strings.Split(string(src), "\n")
-	c := append(lines, content...)
+	lines := strings.Split(string(content), "\n")
+	c := append(lines, strings.Split(src, "\n")...)
 	fileContent := strings.Join(c, "\n")
 
 	err = ioutil.WriteFile(tr.filePath, []byte(fileContent), 0755)

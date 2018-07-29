@@ -124,7 +124,7 @@ func New(args []string) (*makr.Generator, error) {
 				), err
 			`, "\n"))
 
-			tr.Append(strings.Split(`
+			tr.Append(`
 				// Create wraps up the pattern of encrypting the password and
 				// running validations. Useful when writing tests.
 				func (u *User) Create(tx *pop.Connection) (*validate.Errors, error) {
@@ -137,7 +137,7 @@ func New(args []string) (*makr.Generator, error) {
 					return tx.ValidateAndCreate(u)
 				}
 
-			`, "\n"))
+			`)
 
 			tr.AddImports("\"strings\"", "\"github.com/pkg/errors\"", "\"golang.org/x/crypto/bcrypt\"")
 			return nil
