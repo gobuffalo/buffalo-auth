@@ -99,6 +99,28 @@ func Test_Transformer_RemoveBlock(t *testing.T) {
 
 }
 
+func Test_Transformer_InsertInBlock(t *testing.T) {
+	r := require.New(t)
+
+	tcases := []struct {
+		goldensPrefix string
+		blockStart    string
+		content       string
+	}{
+		{"insert-in-block-1", `func UsersNew(c buffalo.Context) error {`, "fmt.Println(\"Hello\")"},
+	}
+
+	for _, tcase := range tcases {
+		expected, result, err := matchesAfter(tcase.goldensPrefix, func(tr *Transformer) {
+			r.NoError(tr.InsertInBlock(tcase.blockStart, tcase.content))
+		})
+
+		r.NoError(err)
+		r.Equal(expected, result)
+	}
+
+}
+
 func matchesAfter(prefix string, fn func(tr *Transformer)) (string, string, error) {
 	base, err := ioutil.ReadFile(filepath.Join("testdata", prefix+"-in.golden"))
 	if err != nil {

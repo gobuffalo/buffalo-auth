@@ -152,7 +152,7 @@ func (tr *Transformer) RemoveBlock(starting string) error {
 }
 
 //InsertInBlock replaces block body starting with string
-func (tr *Transformer) InsertInBlock(starting string, content []string) error {
+func (tr *Transformer) InsertInBlock(starting string, content ...string) error {
 	start, end, err := tr.FindBlockFor(starting)
 	if err != nil {
 		return err
