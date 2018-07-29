@@ -1,7 +1,6 @@
 package transformer
 
 import (
-	"errors"
 	"fmt"
 	"go/ast"
 	"go/parser"
@@ -9,6 +8,8 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+
+	"github.com/sirupsen/logrus"
 )
 
 //Transformer has helper classes to modify go source code
@@ -133,7 +134,8 @@ func (tr *Transformer) RemoveBlock(starting string) error {
 	}
 
 	if end < 0 {
-		return errors.New("could not find desired block on the app.go file")
+		logrus.Warnf("could not find block in %v", tr.filePath)
+		return nil
 	}
 
 	src, err := ioutil.ReadFile(tr.filePath)
@@ -157,7 +159,7 @@ func (tr *Transformer) InsertInBlock(starting string, content []string) error {
 	}
 
 	if end < 0 {
-		return errors.New("could not find desired block on the app.go file")
+		return fmt.Errorf("could not find desired block in the file (%v)", tr.filePath)
 	}
 
 	src, err := ioutil.ReadFile(tr.filePath)

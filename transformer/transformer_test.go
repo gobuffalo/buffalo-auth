@@ -77,6 +77,28 @@ func Test_Transformer_AppendAfterSource(t *testing.T) {
 
 }
 
+func Test_Transformer_RemoveBlock(t *testing.T) {
+	r := require.New(t)
+
+	tcases := []struct {
+		goldensPrefix string
+		blockStart    string
+	}{
+		{"remove-block-1", `func UsersNew(c buffalo.Context) error {`},
+		{"remove-block-2", `func DontHaveIt(c buffalo.Context) error {`},
+	}
+
+	for _, tcase := range tcases {
+		expected, result, err := matchesAfter(tcase.goldensPrefix, func(tr *Transformer) {
+			r.NoError(tr.RemoveBlock(tcase.blockStart))
+		})
+
+		r.NoError(err)
+		r.Equal(expected, result)
+	}
+
+}
+
 func matchesAfter(prefix string, fn func(tr *Transformer)) (string, string, error) {
 	base, err := ioutil.ReadFile(filepath.Join("testdata", prefix+"-in.golden"))
 	if err != nil {
