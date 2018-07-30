@@ -80,7 +80,7 @@ func New(args []string) (*makr.Generator, error) {
 			tr.AppendToBlock("type User struct {", []string{
 				"Password string `json:\"-\" db:\"-\"`",
 				"PasswordConfirmation string `json:\"-\" db:\"-\"`",
-			})
+			}...)
 
 			return nil
 		},

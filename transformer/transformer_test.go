@@ -121,6 +121,28 @@ func Test_Transformer_SetBlockBody(t *testing.T) {
 
 }
 
+func Test_Transformer_AppendToBlock(t *testing.T) {
+	r := require.New(t)
+
+	tcases := []struct {
+		goldensPrefix string
+		blockStart    string
+		content       string
+	}{
+		{"append-to-block-1", `type Admin struct {`, "Email string"},
+	}
+
+	for _, tcase := range tcases {
+		expected, result, err := matchesAfter(tcase.goldensPrefix, func(tr *Transformer) {
+			r.NoError(tr.AppendToBlock(tcase.blockStart, tcase.content))
+		})
+
+		r.NoError(err)
+		r.Equal(expected, result)
+	}
+
+}
+
 func matchesAfter(prefix string, fn func(tr *Transformer)) (string, string, error) {
 	base, err := ioutil.ReadFile(filepath.Join("testdata", prefix+"-in.golden"))
 	if err != nil {

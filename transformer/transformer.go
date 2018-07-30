@@ -18,7 +18,7 @@ type Transformer struct {
 	file     os.File
 }
 
-//NewTransformer creates a SourceManipulator from a provided file
+//NewTransformer creates a Transformer for a provided path of a file
 func NewTransformer(path string) *Transformer {
 	return &Transformer{
 		filePath: path,
@@ -176,7 +176,7 @@ func (tr *Transformer) SetBlockBody(starting string, content ...string) error {
 }
 
 //AppendToBlock adds source before block ends
-func (tr *Transformer) AppendToBlock(startingExpr string, content []string) error {
+func (tr *Transformer) AppendToBlock(startingExpr string, content ...string) error {
 	_, end, err := tr.FindBlockFor(startingExpr)
 	if err != nil {
 		return err
