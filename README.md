@@ -38,6 +38,13 @@ This will do:
   - [POST] /signin -> AuthCreate
   - [DELETE] /signout -> AuthDestroy
 
+- Use middlewares for all your actions and skip
+  - HomeHandler
+  - UsersNew
+  - UsersCreate
+  - AuthNew
+  - AuthCreate
+
 ### User model Fields
 
 Sometimes you would want to add extra fields to the user model, to do so, you can pass those to the auth command and use the pop notation for those fields, for example:
