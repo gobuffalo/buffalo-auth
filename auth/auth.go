@@ -128,7 +128,7 @@ func New(args []string) (*makr.Generator, error) {
 				// Create wraps up the pattern of encrypting the password and
 				// running validations. Useful when writing tests.
 				func (u *User) Create(tx *pop.Connection) (*validate.Errors, error) {
-					u.Email = strings.ToLower(u.Email)
+					u.Email = strings.ToLower(strings.TrimSpace(u.Email))
 					ph, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 					if err != nil {
 						return validate.NewErrors(), errors.WithStack(err)

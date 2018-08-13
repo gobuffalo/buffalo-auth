@@ -28,7 +28,7 @@ func AuthCreate(c buffalo.Context) error {
 	tx := c.Value("tx").(*pop.Connection)
 
 	// find a user with the email
-	err := tx.Where("email = ?", strings.ToLower(u.Email)).First(u)
+	err := tx.Where("email = ?", strings.ToLower(strings.TrimSpace(u.Email))).First(u)
 
 	// helper function to handle bad attempts
 	bad := func() error {
