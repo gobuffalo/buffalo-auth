@@ -10,12 +10,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var dryRun bool
+
 // authCmd generates a actions/auth.go file configured to the specified providers.
 var authCmd = &cobra.Command{
 	Use:   "auth",
 	Short: "Generates a full auth implementation",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		r := genny.WetRunner(context.Background())
+		if dryRun {
+			r = genny.DryRunner(context.Background())
+		}
+
 		g, err := auth.New(args)
 		if err != nil {
 			return err
@@ -34,5 +40,6 @@ var authCmd = &cobra.Command{
 }
 
 func init() {
+	authCmd.Flags().BoolVarP(&dryRun, "dry-run", "d", false, "run the generator without creating files or running commands")
 	RootCmd.AddCommand(authCmd)
 }
