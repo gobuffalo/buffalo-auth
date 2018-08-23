@@ -1,0 +1,40 @@
+# github.com/davecgh/go-spew v1.1.0
+github.com/davecgh/go-spew/spew
+# github.com/gobuffalo/buffalo v0.12.3
+github.com/gobuffalo/buffalo/generators
+# github.com/gobuffalo/buffalo-auth v0.0.0-20180813221952-19f88cd76350
+github.com/gobuffalo/buffalo-auth/cmd
+github.com/gobuffalo/buffalo-auth/transformer
+github.com/gobuffalo/buffalo-auth/auth
+# github.com/gobuffalo/buffalo-plugins v0.0.0-20180716134457-e0237243a8b9
+github.com/gobuffalo/buffalo-plugins/plugins
+# github.com/gobuffalo/envy v1.6.3
+github.com/gobuffalo/envy
+# github.com/gobuffalo/makr v1.1.0
+github.com/gobuffalo/makr
+# github.com/gobuffalo/packr v1.11.1
+github.com/gobuffalo/packr
+# github.com/inconshreveable/mousetrap v1.0.0
+github.com/inconshreveable/mousetrap
+# github.com/joho/godotenv v1.2.0
+github.com/joho/godotenv
+# github.com/markbates/inflect v1.0.0
+github.com/markbates/inflect
+# github.com/pkg/errors v0.8.0
+github.com/pkg/errors
+# github.com/pmezard/go-difflib v1.0.0
+github.com/pmezard/go-difflib/difflib
+# github.com/sirupsen/logrus v1.0.5
+github.com/sirupsen/logrus
+# github.com/spf13/cobra v0.0.3
+github.com/spf13/cobra
+# github.com/spf13/pflag v1.0.1
+github.com/spf13/pflag
+# github.com/stretchr/testify v1.2.2
+github.com/stretchr/testify/require
+github.com/stretchr/testify/assert
+# golang.org/x/crypto v0.0.0-20180621125126-a49355c7e3f8
+golang.org/x/crypto/ssh/terminal
+# golang.org/x/sys v0.0.0-20180715085529-ac767d655b30
+golang.org/x/sys/unix
+golang.org/x/sys/windows
