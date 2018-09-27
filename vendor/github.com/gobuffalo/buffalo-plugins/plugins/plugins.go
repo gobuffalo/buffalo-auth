@@ -12,12 +12,14 @@ import (
 	"time"
 
 	"github.com/gobuffalo/envy"
-	"github.com/pkg/errors"
+	"github.com/markbates/oncer"
 	"github.com/sirupsen/logrus"
 )
 
 // List maps a Buffalo command to a slice of Command
 type List map[string]Commands
+
+var _list List
 
 // Available plugins for the `buffalo` command.
 // It will look in $GOPATH/bin and the `./plugins` directory.
@@ -38,73 +40,77 @@ type List map[string]Commands
 // variable. It must be set to a duration that `time.ParseDuration` can
 // process.
 func Available() (List, error) {
-	list := List{}
-	paths := []string{"plugins"}
+	var err error
+	oncer.Do("plugins.Available", func() {
+		list := List{}
+		paths := []string{"plugins"}
 
-	from, err := envy.MustGet("BUFFALO_PLUGIN_PATH")
-	if err != nil {
-		from, err = envy.MustGet("GOPATH")
+		from, err := envy.MustGet("BUFFALO_PLUGIN_PATH")
 		if err != nil {
-			return list, errors.WithStack(err)
-		}
-		from = filepath.Join(from, "bin")
-	}
-
-	const timeoutEnv = "BUFFALO_PLUGIN_TIMEOUT"
-	timeout := time.Second
-	rawTimeout, err := envy.MustGet(timeoutEnv)
-	if err == nil {
-		if parsed, err := time.ParseDuration(rawTimeout); err == nil {
-			timeout = parsed
-		} else {
-			logrus.Errorf("%q value is malformed assuming default %q: %v", timeoutEnv, timeout, err)
-		}
-	} else {
-		logrus.Debugf("%q not set, assuming default of %v", timeoutEnv, timeout)
-	}
-
-	if runtime.GOOS == "windows" {
-		paths = append(paths, strings.Split(from, ";")...)
-	} else {
-		paths = append(paths, strings.Split(from, ":")...)
-	}
-
-	for _, p := range paths {
-		if ignorePath(p) {
-			continue
-		}
-		if _, err := os.Stat(p); err != nil {
-			continue
-		}
-		err := filepath.Walk(p, func(path string, info os.FileInfo, err error) error {
+			from, err = envy.MustGet("GOPATH")
 			if err != nil {
-				// May indicate a permissions problem with the path, skip it
-				return nil
+				return
 			}
-			if info.IsDir() {
-				return nil
-			}
-			base := filepath.Base(path)
-			if strings.HasPrefix(base, "buffalo-") {
-				ctx, cancel := context.WithTimeout(context.Background(), timeout)
-				commands := askBin(ctx, path)
-				cancel()
-				for _, c := range commands {
-					bc := c.BuffaloCommand
-					if _, ok := list[bc]; !ok {
-						list[bc] = Commands{}
-					}
-					c.Binary = path
-					list[bc] = append(list[bc], c)
-				}
-			}
-			return nil
-		})
-		if err != nil {
-			return nil, errors.WithStack(err)
+			from = filepath.Join(from, "bin")
 		}
-	}
-	return list, nil
+
+		const timeoutEnv = "BUFFALO_PLUGIN_TIMEOUT"
+		timeout := time.Second
+		rawTimeout, err := envy.MustGet(timeoutEnv)
+		if err == nil {
+			if parsed, err := time.ParseDuration(rawTimeout); err == nil {
+				timeout = parsed
+			} else {
+				logrus.Errorf("%q value is malformed assuming default %q: %v", timeoutEnv, timeout, err)
+			}
+		} else {
+			logrus.Debugf("%q not set, assuming default of %v", timeoutEnv, timeout)
+		}
+
+		if runtime.GOOS == "windows" {
+			paths = append(paths, strings.Split(from, ";")...)
+		} else {
+			paths = append(paths, strings.Split(from, ":")...)
+		}
+
+		for _, p := range paths {
+			if ignorePath(p) {
+				continue
+			}
+			if _, err := os.Stat(p); err != nil {
+				continue
+			}
+			err := filepath.Walk(p, func(path string, info os.FileInfo, err error) error {
+				if err != nil {
+					// May indicate a permissions problem with the path, skip it
+					return nil
+				}
+				if info.IsDir() {
+					return nil
+				}
+				base := filepath.Base(path)
+				if strings.HasPrefix(base, "buffalo-") {
+					ctx, cancel := context.WithTimeout(context.Background(), timeout)
+					commands := askBin(ctx, path)
+					cancel()
+					for _, c := range commands {
+						bc := c.BuffaloCommand
+						if _, ok := list[bc]; !ok {
+							list[bc] = Commands{}
+						}
+						c.Binary = path
+						list[bc] = append(list[bc], c)
+					}
+				}
+				return nil
+			})
+			if err != nil {
+				return
+			}
+		}
+		_list = list
+	})
+	return _list, err
 }
 
 func askBin(ctx context.Context, path string) Commands {
@@ -119,11 +125,15 @@ func askBin(ctx context.Context, path string) Commands {
 		logrus.Errorf("[PLUGIN] error loading plugin %s: %s\n%s\n", path, err, bb.String())
 		return commands
 	}
-	err = json.NewDecoder(bb).Decode(&commands)
-	if err != nil {
-		logrus.Errorf("[PLUGIN] error loading plugin %s: %s\n", path, err)
-		return commands
+	msg := bb.String()
+	for len(msg) > 0 {
+		err = json.NewDecoder(strings.NewReader(msg)).Decode(&commands)
+		if err == nil {
+			return commands
+		}
+		msg = msg[1:]
 	}
+	logrus.Errorf("[PLUGIN] error decoding plugin %s: %s\n%s\n", path, err, msg)
 	return commands
 }
 

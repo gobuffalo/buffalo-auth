@@ -1,11 +1,14 @@
 package genny
 
 import (
+	"bytes"
 	"context"
 	"io"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"time"
 
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -20,10 +23,31 @@ func WetRunner(ctx context.Context) *Runner {
 	r.Logger = l
 
 	r.ExecFn = wetExecFn
-	r.FileFn = func(f File) error {
+	r.FileFn = func(f File) (File, error) {
 		return wetFileFn(r, f)
 	}
+	r.DeleteFn = os.RemoveAll
+	r.RequestFn = wetRequestFn
 	return r
+}
+
+func wetRequestFn(req *http.Request, c *http.Client) (*http.Response, error) {
+	if c == nil {
+		c = &http.Client{}
+	}
+	ctx, cancel := context.WithTimeout(req.Context(), 30*time.Second)
+	defer cancel()
+	req = req.WithContext(ctx)
+
+	res, err := c.Do(req)
+	if err != nil {
+		return res, errors.WithStack(err)
+	}
+
+	if res.StatusCode >= 400 {
+		return res, errors.WithStack(errors.Errorf("response returned non-success code: %d", res.StatusCode))
+	}
+	return res, nil
 }
 
 func wetExecFn(cmd *exec.Cmd) error {
@@ -39,22 +63,24 @@ func wetExecFn(cmd *exec.Cmd) error {
 	return cmd.Run()
 }
 
-func wetFileFn(r *Runner, f File) error {
+func wetFileFn(r *Runner, f File) (File, error) {
 	name := f.Name()
 	if !filepath.IsAbs(name) {
 		name = filepath.Join(r.Root, name)
 	}
 	dir := filepath.Dir(name)
 	if err := os.MkdirAll(dir, 0755); err != nil {
-		return errors.WithStack(err)
+		return f, errors.WithStack(err)
 	}
 	ff, err := os.Create(name)
 	if err != nil {
-		return errors.WithStack(err)
+		return f, errors.WithStack(err)
 	}
 	defer ff.Close()
-	if _, err := io.Copy(ff, f); err != nil {
-		return errors.WithStack(err)
+	bb := &bytes.Buffer{}
+	mw := io.MultiWriter(bb, ff)
+	if _, err := io.Copy(mw, f); err != nil {
+		return f, errors.WithStack(err)
 	}
-	return nil
+	return NewFile(f.Name(), bb), nil
 }

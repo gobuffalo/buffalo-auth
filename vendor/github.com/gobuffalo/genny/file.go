@@ -1,6 +1,7 @@
 package genny
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -22,9 +23,9 @@ func (s simpleFile) Name() string {
 	return s.name
 }
 
-func (s simpleFile) String() string {
+func (s *simpleFile) String() string {
 	src, _ := ioutil.ReadAll(s)
-	s.Seek(0, 0)
+	s.Reader = bytes.NewReader(src)
 	return string(src)
 }
 
@@ -38,7 +39,13 @@ func (s simpleFile) Seek(offset int64, whence int) (int64, error) {
 // NewFile takes the name of the file you want to
 // write to and a reader to reader from
 func NewFile(name string, r io.Reader) File {
-	return simpleFile{
+	if r == nil {
+		r = &bytes.Buffer{}
+	}
+	if seek, ok := r.(io.Seeker); ok {
+		seek.Seek(0, 0)
+	}
+	return &simpleFile{
 		Reader: r,
 		name:   name,
 	}

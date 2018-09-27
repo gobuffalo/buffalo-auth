@@ -1,17 +1,17 @@
 package genny
 
 import (
-	"bytes"
 	"context"
+	"fmt"
 	"io"
-	"io/ioutil"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
-	"sort"
 	"strings"
 	"sync"
 
+	"github.com/markbates/oncer"
 	"github.com/pkg/errors"
 )
 
@@ -19,29 +19,25 @@ type RunFn func(r *Runner) error
 
 // Runner will run the generators
 type Runner struct {
-	Logger     Logger                           // Logger to use for the run
-	Context    context.Context                  // context to use for the run
-	ExecFn     func(*exec.Cmd) error            // function to use when executing files
-	FileFn     func(File) error                 // function to use when writing files
-	ChdirFn    func(string, func() error) error // function to use when changing directories
-	Root       string                           // the root of the write path
+	Logger     Logger                                                    // Logger to use for the run
+	Context    context.Context                                           // context to use for the run
+	ExecFn     func(*exec.Cmd) error                                     // function to use when executing files
+	FileFn     func(File) (File, error)                                  // function to use when writing files
+	ChdirFn    func(string, func() error) error                          // function to use when changing directories
+	DeleteFn   func(string) error                                        // function used to delete files/folders
+	RequestFn  func(*http.Request, *http.Client) (*http.Response, error) // function used to make http requests
+	Root       string                                                    // the root of the write path
+	Disk       *Disk
 	generators []*Generator
 	moot       *sync.RWMutex
 	results    Results
-	files      map[string]File
+	curGen     *Generator
 }
 
 func (r *Runner) Results() Results {
 	r.moot.Lock()
 	defer r.moot.Unlock()
-	var files []File
-	for _, f := range r.files {
-		files = append(files, f)
-	}
-	sort.Slice(files, func(i, j int) bool {
-		return files[i].Name() < files[j].Name()
-	})
-	r.results.Files = files
+	r.results.Files = r.Disk.Files()
 	return r.results
 }
 
@@ -58,9 +54,33 @@ func (r *Runner) With(g *Generator) {
 	r.generators = append(r.generators, g)
 }
 
+func (r *Runner) WithGroup(gg *Group) {
+	for _, g := range gg.Generators {
+		r.With(g)
+	}
+}
+
+// WithNew takes a Generator and an error.
+// Perfect for new-ing up generators
+/*
+// foo.New(Options) (*genny.Generator, error)
+if err := run.WithNew(foo.New(opts)); err != nil {
+	return err
+}
+*/
+func (r *Runner) WithNew(g *Generator, err error) error {
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	r.With(g)
+	return nil
+}
+
 // WithFn will evaluate the function and if successful it will add
 // the Generator to the Runner, otherwise it will return the error
+// Deprecated
 func (r *Runner) WithFn(fn func() (*Generator, error)) error {
+	oncer.Deprecate(5, "genny.Runner#WithFn", "")
 	g, err := fn()
 	if err != nil {
 		return errors.WithStack(err)
@@ -74,6 +94,12 @@ func (r *Runner) Run() error {
 	r.moot.Lock()
 	defer r.moot.Unlock()
 	for _, g := range r.generators {
+		r.curGen = g
+		if g.Should != nil {
+			if !g.Should(r) {
+				continue
+			}
+		}
 		for _, fn := range g.runners {
 			if err := fn(r); err != nil {
 				return errors.WithStack(err)
@@ -95,48 +121,37 @@ func (r *Runner) Exec(cmd *exec.Cmd) error {
 
 // File can be used inside of Generators to write files
 func (r *Runner) File(f File) error {
-	defer func() {
-		r.files[f.Name()] = f
-	}()
+	if r.curGen != nil {
+		var err error
+		f, err = r.curGen.Transform(f)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+	}
 	name := f.Name()
 	if !filepath.IsAbs(name) {
 		name = filepath.Join(r.Root, name)
 	}
 	r.Logger.Infof(name)
 	if r.FileFn != nil {
-		return r.FileFn(f)
+		var err error
+		if f, err = r.FileFn(f); err != nil {
+			return errors.WithStack(err)
+		}
+		if s, ok := f.(io.Seeker); ok {
+			s.Seek(0, 0)
+		}
 	}
-	b, err := ioutil.ReadAll(f)
-	if err != nil {
-		return errors.WithStack(err)
+	f = NewFile(f.Name(), f)
+	if s, ok := f.(io.Seeker); ok {
+		s.Seek(0, 0)
 	}
-	f = NewFile(f.Name(), bytes.NewReader(b))
-	r.Logger.Debugf(string(b))
+	r.Disk.Add(f)
 	return nil
 }
 
 func (r *Runner) FindFile(name string) (File, error) {
-	if f, ok := r.files[name]; ok {
-		if seek, ok := f.(io.Seeker); ok {
-			seek.Seek(0, 0)
-		}
-		return f, nil
-	}
-
-	gf := NewFile(name, bytes.NewReader([]byte("")))
-	f, err := os.Open(name)
-	if err != nil {
-		return gf, errors.WithStack(err)
-	}
-	defer f.Close()
-
-	bb := &bytes.Buffer{}
-
-	if _, err := io.Copy(bb, f); err != nil {
-		return gf, errors.WithStack(err)
-	}
-
-	return NewFile(name, bb), nil
+	return r.Disk.Find(name)
 }
 
 // Chdir will change to the specified directory
@@ -145,7 +160,10 @@ func (r *Runner) FindFile(name string) (File, error) {
 // If the directory does not exist, it will be
 // created for you.
 func (r *Runner) Chdir(path string, fn func() error) error {
-	r.Logger.Infof("CD: %s", path)
+	if len(path) == 0 {
+		return fn()
+	}
+	r.Logger.Infof("cd: %s", path)
 
 	if r.ChdirFn != nil {
 		return r.ChdirFn(path, fn)
@@ -161,4 +179,40 @@ func (r *Runner) Chdir(path string, fn func() error) error {
 		return errors.WithStack(err)
 	}
 	return nil
+}
+
+func (r *Runner) Delete(path string) error {
+	r.Logger.Infof("rm: %s", path)
+
+	defer r.Disk.Remove(path)
+	if r.DeleteFn != nil {
+		return r.DeleteFn(path)
+	}
+	return nil
+}
+
+func (r *Runner) Request(req *http.Request) (*http.Response, error) {
+	return r.RequestWithClient(req, http.DefaultClient)
+}
+
+func (r *Runner) RequestWithClient(req *http.Request, c *http.Client) (*http.Response, error) {
+	key := fmt.Sprintf("[%s] %s\n", strings.ToUpper(req.Method), req.URL)
+	r.Logger.Infof(key)
+	store := func(res *http.Response, err error) {
+		r.moot.Lock()
+		r.results.Requests = append(r.results.Requests, RequestResult{
+			Request:  req,
+			Response: res,
+			Client:   c,
+			Error:    err,
+		})
+		r.moot.Unlock()
+	}
+	if r.RequestFn == nil {
+		store(nil, nil)
+		return nil, nil
+	}
+	res, err := r.RequestFn(req, c)
+	store(res, err)
+	return res, err
 }
