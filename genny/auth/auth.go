@@ -8,11 +8,11 @@ import (
 	"github.com/gobuffalo/buffalo-auth/transformer"
 	"github.com/gobuffalo/buffalo/generators"
 	"github.com/gobuffalo/buffalo/meta"
+	"github.com/gobuffalo/flect"
 	"github.com/gobuffalo/genny"
 	"github.com/gobuffalo/genny/movinglater/plushgen"
 	"github.com/gobuffalo/packr"
 	"github.com/gobuffalo/plush"
-	"github.com/markbates/inflect"
 	"github.com/pkg/errors"
 )
 
@@ -45,7 +45,6 @@ func extractFields(args []string) ([]string, []string) {
 	fields := []string{"user", "email", "password_hash"}
 	extraFields := []string{}
 	for _, field := range args {
-
 		fieldName := strings.Split(field, ":")[0]
 		if strings.Contains(strings.Join(fields, "\n"), fieldName) {
 			continue
@@ -62,7 +61,7 @@ func formFieldsFn(extraFields []string) genny.RunFn {
 	return func(r *genny.Runner) error {
 		fieldInputs := []string{}
 		for _, field := range extraFields {
-			name := inflect.Camelize(field)
+			name := flect.Capitalize(flect.Camelize(field))
 			fieldInputs = append(fieldInputs, fmt.Sprintf(`<%%= f.InputTag("%v", {}) %%>`, name))
 		}
 

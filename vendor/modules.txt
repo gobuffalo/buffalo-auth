@@ -9,6 +9,8 @@ github.com/gobuffalo/buffalo/meta
 github.com/gobuffalo/buffalo-plugins/plugins
 # github.com/gobuffalo/envy v1.6.4
 github.com/gobuffalo/envy
+# github.com/gobuffalo/flect v0.0.0-20180728145722-2949e73d74b0
+github.com/gobuffalo/flect
 # github.com/gobuffalo/genny v0.0.0-20180823134419-80135003197d
 github.com/gobuffalo/genny
 github.com/gobuffalo/genny/movinglater/gotools
