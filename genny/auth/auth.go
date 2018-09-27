@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/gobuffalo/buffalo-auth/transformer"
-	"github.com/gobuffalo/buffalo/generators"
 	"github.com/gobuffalo/buffalo/meta"
 	"github.com/gobuffalo/flect"
 	"github.com/gobuffalo/genny"
@@ -73,7 +72,8 @@ func formFieldsFn(extraFields []string) genny.RunFn {
 }
 
 func addAppActions(r *genny.Runner) error {
-	return generators.AddInsideAppBlock(
+	tr := transformer.NewTransformer("actions/app.go")
+	err := tr.AppendBefore(`app.ServeFiles("/", assetsBox)`,
 		`app.Use(SetCurrentUser)`,
 		`app.Use(Authorize)`,
 		`app.GET("/users/new", UsersNew)`,
@@ -83,6 +83,8 @@ func addAppActions(r *genny.Runner) error {
 		`app.DELETE("/signout", AuthDestroy)`,
 		`app.Middleware.Skip(Authorize, HomeHandler, UsersNew, UsersCreate, AuthNew, AuthCreate)`,
 	)
+
+	return err
 }
 
 func addPasswordFields(r *genny.Runner) error {

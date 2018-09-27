@@ -99,6 +99,33 @@ func (tr *Transformer) AppendAfter(reference string, source ...string) error {
 	return err
 }
 
+func (tr *Transformer) AppendBefore(reference string, source ...string) error {
+
+	content, err := ioutil.ReadFile(tr.filePath)
+	if err != nil {
+		return err
+	}
+
+	lines := strings.Split(string(content), "\n")
+	lineNumber := -1
+	for num, line := range lines {
+		if !strings.Contains(line, reference) {
+			continue
+		}
+
+		lineNumber = num + 1
+		break
+	}
+
+	if lineNumber != -1 {
+		lines = append(lines[:lineNumber-1], append(source, lines[lineNumber-1:]...)...)
+	}
+
+	fileContent := strings.Join(lines, "\n")
+	err = ioutil.WriteFile(tr.filePath, []byte(fileContent), 0755)
+	return err
+}
+
 //RemoveLine removes a line starting with some passed code
 func (tr *Transformer) RemoveLine(starting string) error {
 	src, err := ioutil.ReadFile(tr.filePath)
