@@ -99,8 +99,8 @@ func (tr *Transformer) AppendAfter(reference string, source ...string) error {
 	return err
 }
 
+//AppendBefore adds code before passed reference
 func (tr *Transformer) AppendBefore(reference string, source ...string) error {
-
 	content, err := ioutil.ReadFile(tr.filePath)
 	if err != nil {
 		return err
