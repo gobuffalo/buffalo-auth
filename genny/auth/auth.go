@@ -2,13 +2,15 @@ package auth
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 
-	"github.com/gobuffalo/buffalo-auth/transformer"
 	"github.com/gobuffalo/buffalo/meta"
 	"github.com/gobuffalo/flect"
 	"github.com/gobuffalo/genny"
+	"github.com/gobuffalo/genny/movinglater/gotools"
 	"github.com/gobuffalo/genny/movinglater/plushgen"
 	"github.com/gobuffalo/packr"
 	"github.com/gobuffalo/plush"
@@ -21,8 +23,8 @@ func New(args []string) (*genny.Generator, error) {
 
 	fields, extraFields := extractFields(args)
 
-	commandParts := append([]string{"db", "generate", "model"}, fields...)
-	g.Command(exec.Command("buffalo", commandParts...))
+	parts := append([]string{"db", "generate", "model"}, fields...)
+	g.Command(exec.Command("buffalo", parts...))
 
 	if err := g.Box(packr.NewBox("./templates")); err != nil {
 		return g, errors.WithStack(err)
@@ -32,10 +34,10 @@ func New(args []string) (*genny.Generator, error) {
 	ctx.Set("app", meta.New("."))
 
 	g.Transformer(plushgen.Transformer(ctx))
-	g.RunFn(formFieldsFn(extraFields))
-	g.RunFn(addAppActions)
-	g.RunFn(addPasswordFields)
 	g.RunFn(modifyUsersModel)
+	g.RunFn(addPasswordFields)
+	g.RunFn(addAppActions)
+	g.RunFn(formFieldsFn(extraFields))
 
 	return g, nil
 }
@@ -64,16 +66,39 @@ func formFieldsFn(extraFields []string) genny.RunFn {
 			fieldInputs = append(fieldInputs, fmt.Sprintf(`<%%= f.InputTag("%v", {}) %%>`, name))
 		}
 
-		tr := transformer.NewTransformer("templates/users/new.html")
-		tr.AppendAfter(`<%= f.InputTag("PasswordConfirmation", {type: "password"}) %>`, fieldInputs...)
+		path := filepath.Join("templates", "users", "new.html")
+		f, err := os.Open(path)
+		if err != nil {
+			return err
+		}
 
-		return nil
+		gf := genny.NewFile(path, f)
+		lines := strings.Split(gf.String(), "\n")
+		ln := -1
+
+		for index, line := range lines {
+			if strings.Contains(line, `<%= f.InputTag("PasswordConfirmation", {type: "password"}) %>`) {
+				ln = index
+				break
+			}
+		}
+
+		lines = append(lines[:ln], append(fieldInputs, lines[ln:]...)...)
+		gf = genny.NewFile(path, strings.NewReader(strings.Join(lines, "\n")))
+		return r.File(gf)
 	}
 }
 
 func addAppActions(r *genny.Runner) error {
-	tr := transformer.NewTransformer("actions/app.go")
-	err := tr.AppendBefore(`app.ServeFiles("/", assetsBox)`,
+	f, err := os.Open(`actions/app.go`)
+	if err != nil {
+		return err
+	}
+
+	file := genny.NewFile(`actions/app.go`, f)
+	file, err = gotools.AddInsideBlock(
+		file,
+		"if app == nil {",
 		`app.Use(SetCurrentUser)`,
 		`app.Use(Authorize)`,
 		`app.GET("/users/new", UsersNew)`,
@@ -84,70 +109,91 @@ func addAppActions(r *genny.Runner) error {
 		`app.Middleware.Skip(Authorize, HomeHandler, UsersNew, UsersCreate, AuthNew, AuthCreate)`,
 	)
 
-	return err
+	if err != nil {
+		return err
+	}
+
+	return r.File(file)
 }
 
 func addPasswordFields(r *genny.Runner) error {
-	tr := transformer.NewTransformer("models/user.go")
-	tr.AppendToBlock("type User struct {", []string{
+	f, err := os.Open(`models/user.go`)
+	if err != nil {
+		return err
+	}
+	file := genny.NewFile(`models/user.go`, f)
+	file, err = gotools.AddInsideBlock(
+		file,
+		"type User struct {",
 		"Password string `json:\"-\" db:\"-\"`",
 		"PasswordConfirmation string `json:\"-\" db:\"-\"`",
-	}...)
+	)
 
-	return nil
+	if err != nil {
+		return err
+	}
+
+	return r.File(file)
 }
 
 func modifyUsersModel(r *genny.Runner) error {
-	tr := transformer.NewTransformer("models/user.go")
-	tr.SetBlockBody("func (u *User) ValidateCreate(tx *pop.Connection) (*validate.Errors, error) {", `
-			var err error
-			return validate.Validate(
-				&validators.StringIsPresent{Field: u.Password, Name: "Password"},
-				&validators.StringsMatch{Name: "Password", Field: u.Password, Field2: u.PasswordConfirmation, Message: "Password does not match confirmation"},
-			), err
-		`)
+	f, err := os.Open(`models/user.go`)
+	if err != nil {
+		return err
+	}
 
-	tr.SetBlockBody("func (u *User) Validate(tx *pop.Connection) (*validate.Errors, error) {", `
-			var err error
-			return validate.Validate(
-				&validators.StringIsPresent{Field: u.Email, Name: "Email"},
-				&validators.StringIsPresent{Field: u.PasswordHash, Name: "PasswordHash"},
-				// check to see if the email address is already taken:
-				&validators.FuncValidator{
-					Field:   u.Email,
-					Name:    "Email",
-					Message: "%s is already taken",
-					Fn: func() bool {
-						var b bool
-						q := tx.Where("email = ?", u.Email)
-						if u.ID != uuid.Nil {
-							q = q.Where("id != ?", u.ID)
-						}
-						b, err = q.Exists(u)
-						if err != nil {
-							return false
-						}
-						return !b
-					},
-				},
-			), err
-		`)
+	file := genny.NewFile(`models/user.go`, f)
+	file = gotools.ReplaceBlockBody(file, `func (u *User) ValidateCreate(tx *pop.Connection) (*validate.Errors, error) {`, validateCreateFuncBodyLiteral)
+	file = gotools.ReplaceBlockBody(file, "func (u *User) Validate(tx *pop.Connection) (*validate.Errors, error) {", validateFuncBodyLiteral)
+	file = gotools.Append(createFuncLiteral)
+	file, err = gotools.AddImport(file, "strings", "github.com/pkg/errors", "golang.org/x/crypto/bcrypt")
 
-	tr.Append(`
-			// Create wraps up the pattern of encrypting the password and
-			// running validations. Useful when writing tests.
-			func (u *User) Create(tx *pop.Connection) (*validate.Errors, error) {
-				u.Email = strings.ToLower(strings.TrimSpace(u.Email))
-				ph, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
-				if err != nil {
-					return validate.NewErrors(), errors.WithStack(err)
-				}
-				u.PasswordHash = string(ph)
-				return tx.ValidateAndCreate(u)
-			}
-
-		`)
-
-	tr.AddImports("\"strings\"", "\"github.com/pkg/errors\"", "\"golang.org/x/crypto/bcrypt\"")
-	return nil
+	return r.File(file)
 }
+
+const (
+	createFuncLiteral = `
+	// Create wraps up the pattern of encrypting the password and
+	// running validations. Useful when writing tests.
+	func (u *User) Create(tx *pop.Connection) (*validate.Errors, error) {
+		u.Email = strings.ToLower(strings.TrimSpace(u.Email))
+		ph, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
+		if err != nil {
+			return validate.NewErrors(), errors.WithStack(err)
+		}
+		u.PasswordHash = string(ph)
+		return tx.ValidateAndCreate(u)
+	}`
+
+	validateFuncBodyLiteral = `
+		var err error
+		return validate.Validate(
+			&validators.StringIsPresent{Field: u.Email, Name: "Email"},
+			&validators.StringIsPresent{Field: u.PasswordHash, Name: "PasswordHash"},
+			// check to see if the email address is already taken:
+			&validators.FuncValidator{
+				Field:   u.Email,
+				Name:    "Email",
+				Message: "%s is already taken",
+				Fn: func() bool {
+					var b bool
+					q := tx.Where("email = ?", u.Email)
+					if u.ID != uuid.Nil {
+						q = q.Where("id != ?", u.ID)
+					}
+					b, err = q.Exists(u)
+					if err != nil {
+						return false
+					}
+					return !b
+				},
+			},
+		), err`
+
+	validateCreateFuncBodyLiteral = `
+		var err error
+		return validate.Validate(
+			&validators.StringIsPresent{Field: u.Password, Name: "Password"},
+			&validators.StringsMatch{Name: "Password", Field: u.Password, Field2: u.PasswordConfirmation, Message: "Password does not match confirmation"},
+		), err`
+)
