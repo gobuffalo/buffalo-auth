@@ -72,7 +72,6 @@ func New(args []string) (*genny.Generator, error) {
 		}
 
 		gf := genny.NewFile(path, file)
-
 		gf, err = gotools.AddInsideBlock(
 			gf,
 			`if app == nil {`,
