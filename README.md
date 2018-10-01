@@ -1,4 +1,15 @@
+<p align="center"><img src="https://github.com/gobuffalo/buffalo/blob/master/logo.svg" width="360"></p>
+
+<p align="center">
+  <a href="https://godoc.org/github.com/gobuffalo/buffalo-auth"><img src="https://godoc.org/github.com/gobuffalo/buffalo-auth?status.svg" alt="GoDoc"></a>
+  <a href="https://travis-ci.org/gobuffalo/buffalo-auth"><img src="https://travis-ci.org/gobuffalo/buffalo-auth.svg?branch=master" alt="Build Status"></a>
+  <a href="https://goreportcard.com/report/github.com/gobuffalo/buffalo-auth"><img src="https://goreportcard.com/badge/github.com/gobuffalo/buffalo-auth" alt="Go Report Card" /></a>
+</p>
+
+
+
 # Auth Generator for Buffalo
+
 
 ## Installation
 
