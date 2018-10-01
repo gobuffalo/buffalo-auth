@@ -6,7 +6,6 @@ import (
 	"github.com/gobuffalo/buffalo-auth/genny/auth"
 	"github.com/gobuffalo/genny"
 	"github.com/gobuffalo/genny/movinglater/gotools"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
@@ -22,18 +21,13 @@ var authCmd = &cobra.Command{
 			r = genny.DryRunner(context.Background())
 		}
 
-		g, err := auth.New(args)
-		if err != nil {
+		if err := r.WithNew(auth.New(args)); err != nil {
 			return err
 		}
 
-		r.With(g)
-
-		g, err = gotools.GoFmt(r.Root)
-		if err != nil {
-			return errors.WithStack(err)
+		if err := r.WithNew(gotools.GoFmt(r.Root)); err != nil {
+			return err
 		}
-		r.With(g)
 
 		return r.Run()
 	},
