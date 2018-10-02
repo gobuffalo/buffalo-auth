@@ -1,4 +1,4 @@
-FROM gobuffalo/buffalo:v0.12.0
+FROM gobuffalo/buffalo:latest
 
 RUN rm -rf $GOPATH/src/github.com/gobuffalo/buffalo-auth
 ADD . $GOPATH/src/github.com/gobuffalo/buffalo-auth

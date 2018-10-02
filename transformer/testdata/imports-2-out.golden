@@ -1,6 +1,0 @@
-package base
-import "github.com/wawandco/fako"
-import "other/package"
-
-func init(){
-}
