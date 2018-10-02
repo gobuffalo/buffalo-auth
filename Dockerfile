@@ -5,14 +5,14 @@ ADD . $GOPATH/src/github.com/gobuffalo/buffalo-auth
 
 WORKDIR $GOPATH/src/github.com/gobuffalo/buffalo-auth
 RUN go install -v
-RUN go test -v ./...
+RUN go test -race -tags sqlite -v ./...
 
 WORKDIR $GOPATH/src
 
-RUN buffalo new  --db-type=sqlite3 --skip-webpack app 
+RUN buffalo new  --db-type=sqlite3 --skip-webpack app
 WORKDIR $GOPATH/src/app
 
-RUN buffalo g auth 
+RUN buffalo g auth
 RUN buffalo db migrate
 RUN buffalo test -v ./...
 
