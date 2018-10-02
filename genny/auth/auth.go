@@ -2,7 +2,6 @@ package auth
 
 import (
 	"fmt"
-	"os"
 	"path/filepath"
 	"strings"
 	"time"
@@ -65,13 +64,13 @@ func New(args []string) (*genny.Generator, error) {
 	g.Transformer(genny.NewTransformer(".fizz", migrationsTransformer))
 
 	g.RunFn(func(r *genny.Runner) error {
+
 		path := filepath.Join("actions", "app.go")
-		file, err := os.Open(path)
+		gf, err := r.FindFile(path)
 		if err != nil {
 			return err
 		}
 
-		gf := genny.NewFile(path, file)
 		gf, err = gotools.AddInsideBlock(
 			gf,
 			`if app == nil {`,
