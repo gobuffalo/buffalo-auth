@@ -1,17 +1,15 @@
-# github.com/davecgh/go-spew v1.1.1
-github.com/davecgh/go-spew/spew
 # github.com/fatih/structs v1.0.0
 github.com/fatih/structs
-# github.com/gobuffalo/buffalo v0.12.6
+# github.com/gobuffalo/buffalo v0.13.0-rc.1.0.20181001193643-c5177460e647
 github.com/gobuffalo/buffalo/meta
-# github.com/gobuffalo/buffalo-plugins v0.0.0-20180924041210-6ea00eeaef92
+# github.com/gobuffalo/buffalo-plugins v0.0.0-20180928194818-6ca7684eb375
 github.com/gobuffalo/buffalo-plugins/plugins
 # github.com/gobuffalo/envy v1.6.4
 github.com/gobuffalo/envy
 # github.com/gobuffalo/flect v0.0.0-20180907193754-dc14d8acaf9f
 github.com/gobuffalo/flect/name
 github.com/gobuffalo/flect
-# github.com/gobuffalo/genny v0.0.0-20180928214617-9033ae798a5a
+# github.com/gobuffalo/genny v0.0.0-20181002164640-2ee494b3a911
 github.com/gobuffalo/genny
 github.com/gobuffalo/genny/movinglater/gotools
 github.com/gobuffalo/genny/movinglater/attrs
@@ -44,7 +42,7 @@ github.com/inconshreveable/mousetrap
 github.com/joho/godotenv
 # github.com/konsorten/go-windows-terminal-sequences v0.0.0-20180402223658-b729f2633dfe
 github.com/konsorten/go-windows-terminal-sequences
-# github.com/markbates/inflect v1.0.0
+# github.com/markbates/inflect v1.0.1
 github.com/markbates/inflect
 # github.com/markbates/oncer v0.0.0-20180924034138-723ad0170a46
 github.com/markbates/oncer
@@ -52,8 +50,6 @@ github.com/markbates/oncer
 github.com/microcosm-cc/bluemonday
 # github.com/pkg/errors v0.8.0
 github.com/pkg/errors
-# github.com/pmezard/go-difflib v1.0.0
-github.com/pmezard/go-difflib/difflib
 # github.com/serenize/snaker v0.0.0-20171204205717-a683aaf2d516
 github.com/serenize/snaker
 # github.com/sergi/go-diff v1.0.0
@@ -76,9 +72,6 @@ github.com/sourcegraph/syntaxhighlight
 github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.2
 github.com/spf13/pflag
-# github.com/stretchr/testify v1.2.2
-github.com/stretchr/testify/require
-github.com/stretchr/testify/assert
 # golang.org/x/crypto v0.0.0-20180927165925-5295e8364332
 golang.org/x/crypto/ssh/terminal
 # golang.org/x/net v0.0.0-20180926154720-4dfa2610cdf3
@@ -87,7 +80,7 @@ golang.org/x/net/html/atom
 # golang.org/x/sys v0.0.0-20180928133829-e4b3c5e90611
 golang.org/x/sys/unix
 golang.org/x/sys/windows
-# golang.org/x/tools v0.0.0-20180928181343-b3c0be4c978b
+# golang.org/x/tools v0.0.0-20181002045332-008d18139cb7
 golang.org/x/tools/go/ast/astutil
 golang.org/x/tools/imports
 golang.org/x/tools/internal/fastwalk

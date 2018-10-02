@@ -51,7 +51,7 @@ func New(args []string) (*genny.Generator, error) {
 		return g, errors.WithStack(err)
 	}
 
-	if err := g.Box(packr.NewBox(filepath.Join("..", "auth", "templates"))); err != nil {
+	if err := g.Box(packr.NewBox("../auth/templates")); err != nil {
 		return g, errors.WithStack(err)
 	}
 
