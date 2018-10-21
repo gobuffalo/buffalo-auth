@@ -5,6 +5,8 @@ github.com/gobuffalo/buffalo-auth does not try to reinvent the wheel! Instead, i
 Thank you to the following **GIANTS**:
 
 
+* [github.com/BurntSushi/toml](https://godoc.org/github.com/BurntSushi/toml)
+
 * [github.com/fatih/structs](https://godoc.org/github.com/fatih/structs)
 
 * [github.com/gobuffalo/buffalo-auth](https://godoc.org/github.com/gobuffalo/buffalo-auth)
@@ -14,6 +16,8 @@ Thank you to the following **GIANTS**:
 * [github.com/gobuffalo/buffalo-auth/genny/auth](https://godoc.org/github.com/gobuffalo/buffalo-auth/genny/auth)
 
 * [github.com/gobuffalo/buffalo-plugins/plugins](https://godoc.org/github.com/gobuffalo/buffalo-plugins/plugins)
+
+* [github.com/gobuffalo/buffalo-plugins/plugins/plugdeps](https://godoc.org/github.com/gobuffalo/buffalo-plugins/plugins/plugdeps)
 
 * [github.com/gobuffalo/buffalo/meta](https://godoc.org/github.com/gobuffalo/buffalo/meta)
 
@@ -39,6 +43,8 @@ Thank you to the following **GIANTS**:
 
 * [github.com/gobuffalo/github_flavored_markdown/internal/russross/blackfriday](https://godoc.org/github.com/gobuffalo/github_flavored_markdown/internal/russross/blackfriday)
 
+* [github.com/gobuffalo/meta](https://godoc.org/github.com/gobuffalo/meta)
+
 * [github.com/gobuffalo/packr](https://godoc.org/github.com/gobuffalo/packr)
 
 * [github.com/gobuffalo/plush](https://godoc.org/github.com/gobuffalo/plush)
@@ -63,11 +69,17 @@ Thank you to the following **GIANTS**:
 
 * [github.com/gobuffalo/validate/validators](https://godoc.org/github.com/gobuffalo/validate/validators)
 
+* [github.com/gofrs/uuid](https://godoc.org/github.com/gofrs/uuid)
+
 * [github.com/joho/godotenv](https://godoc.org/github.com/joho/godotenv)
+
+* [github.com/karrick/godirwalk](https://godoc.org/github.com/karrick/godirwalk)
 
 * [github.com/markbates/inflect](https://godoc.org/github.com/markbates/inflect)
 
 * [github.com/markbates/oncer](https://godoc.org/github.com/markbates/oncer)
+
+* [github.com/markbates/safe](https://godoc.org/github.com/markbates/safe)
 
 * [github.com/microcosm-cc/bluemonday](https://godoc.org/github.com/microcosm-cc/bluemonday)
 
@@ -108,3 +120,5 @@ Thank you to the following **GIANTS**:
 * [golang.org/x/tools/imports](https://godoc.org/golang.org/x/tools/imports)
 
 * [golang.org/x/tools/internal/fastwalk](https://godoc.org/golang.org/x/tools/internal/fastwalk)
+
+* [golang.org/x/tools/internal/gopathwalk](https://godoc.org/golang.org/x/tools/internal/gopathwalk)
