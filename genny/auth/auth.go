@@ -61,7 +61,7 @@ func New(args []string) (*genny.Generator, error) {
 
 	g.Transformer(plushgen.Transformer(ctx))
 	g.Transformer(genny.NewTransformer(".html", newUserHTMLTransformer))
-	g.Transformer(genny.NewTransformer(".fizz", migrationsTransformer))
+	g.Transformer(genny.NewTransformer(".fizz", migrationsTransformer(time.Now())))
 
 	g.RunFn(func(r *genny.Runner) error {
 
@@ -116,9 +116,9 @@ func newUserHTMLTransformer(f genny.File) (genny.File, error) {
 	return genny.NewFile(f.Name(), b), nil
 }
 
-func migrationsTransformer(f genny.File) (genny.File, error) {
-	t := time.Now()
-	parts := strings.Split(f.Name(), string(filepath.Separator))
-	p := parts[len(parts)-1]
-	return genny.NewFile(filepath.Join("migrations", fmt.Sprintf("%d_%s", t.UnixNano(), p)), f), nil
+func migrationsTransformer(t time.Time) genny.TransformerFn {
+	return func(f genny.File) (genny.File, error) {
+		p := filepath.Base(f.Name())
+		return genny.NewFile(filepath.Join("migrations", fmt.Sprintf("%d_%s", t.UnixNano(), p)), f), nil
+	}
 }
