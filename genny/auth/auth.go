@@ -6,11 +6,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gobuffalo/buffalo/meta"
 	"github.com/gobuffalo/genny"
 	"github.com/gobuffalo/genny/movinglater/attrs"
 	"github.com/gobuffalo/genny/movinglater/gotools"
 	"github.com/gobuffalo/genny/movinglater/plushgen"
+	"github.com/gobuffalo/meta"
 	"github.com/gobuffalo/packr"
 	"github.com/gobuffalo/plush"
 	"github.com/pkg/errors"
