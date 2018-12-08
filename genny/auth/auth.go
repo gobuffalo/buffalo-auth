@@ -117,8 +117,11 @@ func newUserHTMLTransformer(f genny.File) (genny.File, error) {
 }
 
 func migrationsTransformer(t time.Time) genny.TransformerFn {
+
 	return func(f genny.File) (genny.File, error) {
+		n := time.Now().UTC()
+		s := n.Format("20060102150405")
 		p := filepath.Base(f.Name())
-		return genny.NewFile(filepath.Join("migrations", fmt.Sprintf("%d_%s", t.UnixNano(), p)), f), nil
+		return genny.NewFile(filepath.Join("migrations", fmt.Sprintf("%s_%s", s, p)), f), nil
 	}
 }
