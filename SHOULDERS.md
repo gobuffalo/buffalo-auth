@@ -15,6 +15,8 @@ Thank you to the following **GIANTS**:
 
 * [github.com/gobuffalo/buffalo-auth/genny/auth](https://godoc.org/github.com/gobuffalo/buffalo-auth/genny/auth)
 
+* [github.com/gobuffalo/buffalo-auth/packrd](https://godoc.org/github.com/gobuffalo/buffalo-auth/packrd)
+
 * [github.com/gobuffalo/buffalo-plugins/plugins](https://godoc.org/github.com/gobuffalo/buffalo-plugins/plugins)
 
 * [github.com/gobuffalo/buffalo-plugins/plugins/plugdeps](https://godoc.org/github.com/gobuffalo/buffalo-plugins/plugins/plugdeps)
@@ -60,6 +62,18 @@ Thank you to the following **GIANTS**:
 * [github.com/gobuffalo/packd](https://godoc.org/github.com/gobuffalo/packd)
 
 * [github.com/gobuffalo/packr](https://godoc.org/github.com/gobuffalo/packr)
+
+* [github.com/gobuffalo/packr/v2](https://godoc.org/github.com/gobuffalo/packr/v2)
+
+* [github.com/gobuffalo/packr/v2/file](https://godoc.org/github.com/gobuffalo/packr/v2/file)
+
+* [github.com/gobuffalo/packr/v2/file/resolver](https://godoc.org/github.com/gobuffalo/packr/v2/file/resolver)
+
+* [github.com/gobuffalo/packr/v2/file/resolver/encoding/hex](https://godoc.org/github.com/gobuffalo/packr/v2/file/resolver/encoding/hex)
+
+* [github.com/gobuffalo/packr/v2/jam/parser](https://godoc.org/github.com/gobuffalo/packr/v2/jam/parser)
+
+* [github.com/gobuffalo/packr/v2/plog](https://godoc.org/github.com/gobuffalo/packr/v2/plog)
 
 * [github.com/gobuffalo/plush](https://godoc.org/github.com/gobuffalo/plush)
 
