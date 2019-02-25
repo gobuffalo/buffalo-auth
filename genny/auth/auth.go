@@ -6,13 +6,13 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gobuffalo/attrs"
 	"github.com/gobuffalo/genny"
-	"github.com/gobuffalo/genny/movinglater/attrs"
-	"github.com/gobuffalo/genny/movinglater/gotools"
-	"github.com/gobuffalo/genny/movinglater/plushgen"
+	"github.com/gobuffalo/gogen"
 	"github.com/gobuffalo/meta"
 	"github.com/gobuffalo/packr"
 	"github.com/gobuffalo/plush"
+	"github.com/gobuffalo/plushgen"
 	"github.com/pkg/errors"
 )
 
@@ -71,7 +71,7 @@ func New(args []string) (*genny.Generator, error) {
 			return err
 		}
 
-		gf, err = gotools.AddInsideBlock(
+		gf, err = gogen.AddInsideBlock(
 			gf,
 			`if app == nil {`,
 			`app.Use(SetCurrentUser)`,

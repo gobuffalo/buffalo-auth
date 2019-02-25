@@ -5,7 +5,7 @@ import (
 
 	"github.com/gobuffalo/buffalo-auth/genny/auth"
 	"github.com/gobuffalo/genny"
-	"github.com/gobuffalo/genny/movinglater/gotools"
+	"github.com/gobuffalo/gogen"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +25,7 @@ var authCmd = &cobra.Command{
 			return err
 		}
 
-		if err := r.WithNew(gotools.GoFmt(r.Root)); err != nil {
+		if err := r.WithNew(gogen.Fmt(r.Root)); err != nil {
 			return err
 		}
 
