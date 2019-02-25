@@ -15,6 +15,7 @@ require (
 	github.com/gobuffalo/uuid v2.0.5+incompatible // indirect
 	github.com/gobuffalo/validate v2.0.3+incompatible // indirect
 	github.com/pkg/errors v0.8.1
+	github.com/rogpeppe/go-internal v1.2.2 // indirect
 	github.com/serenize/snaker v0.0.0-20171204205717-a683aaf2d516 // indirect
 	github.com/spf13/cobra v0.0.3
 )
