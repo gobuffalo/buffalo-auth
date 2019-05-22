@@ -18,9 +18,11 @@ import (
 
 func extraAttrs(args []string) []string {
 	var names = map[string]string{
-		"email":    "email",
-		"password": "password",
-		"id":       "id",
+		"email":               "email",
+		"password":            "password",
+		"id":                  "id",
+		"recovery_code":       "recovery_code",
+		"recovery_expiration": "recovery_expiration",
 	}
 
 	var result = []string{}
@@ -74,14 +76,20 @@ func New(args []string) (*genny.Generator, error) {
 		gf, err = gogen.AddInsideBlock(
 			gf,
 			`if app == nil {`,
+			`s:= MockSender{}`,
 			`app.Use(SetCurrentUser)`,
 			`app.Use(Authorize)`,
+			`app.Use(SetupRecoverySender(s))`,
 			`app.GET("/users/new", UsersNew)`,
 			`app.POST("/users", UsersCreate)`,
 			`app.GET("/signin", AuthNew)`,
 			`app.POST("/signin", AuthCreate)`,
 			`app.DELETE("/signout", AuthDestroy)`,
-			`app.Middleware.Skip(Authorize, HomeHandler, UsersNew, UsersCreate, AuthNew, AuthCreate)`,
+			`app.GET("/recoverynew", UserRecoveryNew)`,
+			`app.POST("/requestRecovery", UsersRequestRecovery)`,
+			`app.GET("/recover", UserRecover)`,
+			`app.POST("/recoverNow", UsersRecoverNow)`,
+			`app.Middleware.Skip(Authorize, HomeHandler, UsersNew, UsersCreate, AuthNew, AuthCreate, UsersRequestRecovery, UserRecoveryNew, UserRecover, UsersRecoverNow)`,
 		)
 
 		return r.File(gf)

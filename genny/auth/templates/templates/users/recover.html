@@ -14,16 +14,18 @@
 
   .auth-wrapper h1{margin-bottom: 20px;}
 </style>
-
+  
 <div class="auth-wrapper">
   <div class="sign-form">
-    <h1>Sign In</h1>
+    <h1>Recover...</h1>
 
-    <%= form_for(user, {action: signinPath()}) { %>
+    <%= form_for(req, {action: "/recoverNow"}) { %>
       <%= f.InputTag("Email") %>
+      <%= f.InputTag("Code") %>
       <%= f.InputTag("Password", {type: "password"}) %>
-      <button class="btn btn-success">Sign In!</button>
-      <a class="btn btn-info" href="/recoverynew">Forgot Password</a>
+      <%= f.InputTag("PasswordConfirmation", {type: "password"}) %>
+      
+      <button class="btn btn-success">Update!</button>
     <% } %>
   </div>
 </div>
