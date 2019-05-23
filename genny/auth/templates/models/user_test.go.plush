@@ -1,15 +1,12 @@
-package models_test
+package models
 
-import (
-  "<%= app.PackagePkg %>/models"
-)
 
 func (ms *ModelSuite) Test_User_Create() {
 	count, err := ms.DB.Count("users")
 	ms.NoError(err)
 	ms.Equal(0, count)
 
-	u := &models.User{
+	u := &User{
 		Email:                "mark@example.com",
 		Password:             "password",
 		PasswordConfirmation: "password",
@@ -31,7 +28,7 @@ func (ms *ModelSuite) Test_User_Create_ValidationErrors() {
 	ms.NoError(err)
 	ms.Equal(0, count)
 
-	u := &models.User{
+	u := &User{
 		Password: "password",
 	}
 	ms.Zero(u.PasswordHash)
@@ -50,7 +47,7 @@ func (ms *ModelSuite) Test_User_Create_UserExists() {
 	ms.NoError(err)
 	ms.Equal(0, count)
 
-	u := &models.User{
+	u := &User{
 		Email:                "mark@example.com",
 		Password:             "password",
 		PasswordConfirmation: "password",
@@ -66,7 +63,7 @@ func (ms *ModelSuite) Test_User_Create_UserExists() {
 	ms.NoError(err)
 	ms.Equal(1, count)
 
-	u = &models.User{
+	u = &User{
 		Email:    "mark@example.com",
 		Password: "password",
 	}
