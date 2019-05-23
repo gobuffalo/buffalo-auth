@@ -85,11 +85,11 @@ func New(args []string) (*genny.Generator, error) {
 			`app.GET("/signin", AuthNew)`,
 			`app.POST("/signin", AuthCreate)`,
 			`app.DELETE("/signout", AuthDestroy)`,
-			`app.GET("/recoverynew", UserRecoveryNew)`,
-			`app.POST("/requestRecovery", UsersRequestRecovery)`,
+			`app.GET("/recovery", UserRecovery)`,
+			`app.POST("/requestRecovery", UserRequestRecovery)`,
 			`app.GET("/recover", UserRecover)`,
-			`app.POST("/recoverNow", UsersRecoverNow)`,
-			`app.Middleware.Skip(Authorize, HomeHandler, UsersNew, UsersCreate, AuthNew, AuthCreate, UsersRequestRecovery, UserRecoveryNew, UserRecover, UsersRecoverNow)`,
+			`app.POST("/requestRecover", UserRequestRecover)`,
+			`app.Middleware.Skip(Authorize, HomeHandler, UsersNew, UsersCreate, AuthNew, AuthCreate, UserRequestRecovery, UserRecovery, UserRecover, UserRequestRecover)`,
 		)
 
 		return r.File(gf)

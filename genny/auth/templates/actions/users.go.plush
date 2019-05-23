@@ -21,9 +21,9 @@ func UsersNew(c buffalo.Context) error {
 	return c.Render(200, r.HTML("users/new.html"))
 }
 
-// UserRecoveryNew returns the html form for requesting a 
+// UserRecovery returns the html form for requesting a 
 // recovery code
-func UserRecoveryNew(c buffalo.Context) error {
+func UserRecovery(c buffalo.Context) error {
 	req := RecoveryRequest{}
 	c.Set("req", req)
 	return c.Render(200, r.HTML("users/recovery.html"))
@@ -136,9 +136,9 @@ type RecoveryRequest struct {
 	Email string `json:"email"`
 }
 
-// UsersRequestRecovery handles requesting recovery for an account
+// UserRequestRecovery handles requesting recovery for an account
 // when user provides matching email
-func UsersRequestRecovery(c buffalo.Context) error {
+func UserRequestRecovery(c buffalo.Context) error {
 	req := &RecoveryRequest{}
 
 	if err := c.Bind(req); err != nil {
@@ -195,9 +195,9 @@ type RecoveryUpdate struct {
 	PasswordConfirmation string `json:"password_confirm"`
 }
 
-// UsersRecoverNow is used to allow users to reset their passwords
+// UserRequestRecover is used to allow users to reset their passwords
 // using the recovery code we've sent them
-func UsersRecoverNow(c buffalo.Context) error {
+func UserRequestRecover(c buffalo.Context) error {
 	req := &RecoveryUpdate{}
 	if err := c.Bind(req); err != nil {
 		return errors.WithStack(err)
