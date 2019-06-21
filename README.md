@@ -14,7 +14,7 @@
 ## Installation
 
 ```bash
-$ go get -u github.com/gobuffalo/buffalo-auth
+$ go get -u -v github.com/gobuffalo/buffalo-auth
 $ buffalo plugins install github.com/gobuffalo/buffalo-auth
 ```
 
