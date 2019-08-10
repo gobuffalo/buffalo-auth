@@ -2,6 +2,9 @@ create_table("users"){
     t.Column("id", "uuid", {"primary": true})
     t.Column("email", "string", {})
     t.Column("password_hash", "string", {})
+    t.Column("recovery_code", "string", {"null": true})
+    t.Column("recovery_expiration", "datetime", {"null": true})
+
 
     <%= for (attr) in attrs { %> 
     t.Column("<%= attr.Name.Underscore() %>", "<%= attr.CommonType() %>", {})
