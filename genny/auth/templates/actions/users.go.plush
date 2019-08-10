@@ -163,6 +163,7 @@ func UserRequestRecovery(c buffalo.Context) error {
 	}
 	if verrs.HasAny() {
 		c.Set("errors", verrs)
+		// TODO: fix this as well
 		return errors.WithStack(verrs)
 	}
 	go func(u *models.User) {
@@ -223,6 +224,7 @@ func UserRequestRecover(c buffalo.Context) error {
 			return errors.WithStack(err)
 		}
 		if verrs.HasAny() {
+			// TODO: fix this! should return properly
 			return errors.WithStack(verrs)
 		}
 	} else {

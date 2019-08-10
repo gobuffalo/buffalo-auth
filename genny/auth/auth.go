@@ -88,7 +88,7 @@ func New(args []string) (*genny.Generator, error) {
 			`app.GET("/recovery", UserRecovery)`,
 			`app.POST("/requestRecovery", UserRequestRecovery)`,
 			`app.GET("/recover", UserRecover)`,
-			`app.POST("/requestRecover", UserRequestRecover)`,
+			`app.POST("/completeRecovery", UserRequestRecover)`,
 			`app.Middleware.Skip(Authorize, HomeHandler, UsersNew, UsersCreate, AuthNew, AuthCreate, UserRequestRecovery, UserRecovery, UserRecover, UserRequestRecover)`,
 		)
 

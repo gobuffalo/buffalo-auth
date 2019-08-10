@@ -61,7 +61,7 @@ func (as *ActionSuite) Test_Users_Recover() {
   as.Equal(200, res.Code)
 
   req := &RecoveryRequest{
-      Email: u.Email,
+    Email: u.Email,
   }
   res = as.HTML("/requestRecovery").Post(req)
   as.Equal(302, res.Code)
@@ -75,12 +75,12 @@ func (as *ActionSuite) Test_Users_Recover() {
   as.Equal(u.Email, u2.Email)
 
   upreq := &RecoveryUpdate{
-      Email:                u.Email,
-      Code:                 u2.RecoveryCode.String,
-      Password:             password+"2",
-      PasswordConfirmation: password+"2",
+    Email:                u.Email,
+    Code:                 u2.RecoveryCode.String,
+    Password:             password+"2",
+    PasswordConfirmation: password+"2",
   }
-  res = as.HTML("/requestRecover").Post(upreq)
+  res = as.HTML("/completeRecover").Post(upreq)
   as.Equal(302, res.Code)
 
   u2.Password = password+"2"
@@ -111,12 +111,12 @@ func (as *ActionSuite) Test_Users_Recover_Fail() {
   as.Equal(u.Email, u2.Email)
 
   upreq := &RecoveryUpdate{
-      Email:                u.Email,
-      Code:                 u2.RecoveryCode.String+"nope",
-      Password:             password+"2",
-      PasswordConfirmation: password+"2",
+    Email:                u.Email,
+    Code:                 u2.RecoveryCode.String+"nope",
+    Password:             password+"2",
+    PasswordConfirmation: password+"2",
   }
-  res = as.HTML("/requestRecover").Post(upreq)
+  res = as.HTML("/completeRecover").Post(upreq)
   as.Equal(403, res.Code)
 
   u2.Password = password

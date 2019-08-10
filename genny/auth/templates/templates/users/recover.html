@@ -19,7 +19,7 @@
   <div class="sign-form">
     <h1>Recover...</h1>
 
-    <%= form_for(req, {action: "/recoverNow"}) { %>
+    <%= form_for(req, {action: "/completeRecovery"}) { %>
       <%= f.InputTag("Email") %>
       <%= f.InputTag("Code") %>
       <%= f.InputTag("Password", {type: "password"}) %>
