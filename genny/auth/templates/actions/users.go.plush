@@ -163,8 +163,8 @@ func UserRequestRecovery(c buffalo.Context) error {
 	}
 	if verrs.HasAny() {
 		c.Set("errors", verrs)
-		// TODO: fix this as well
-		return errors.WithStack(verrs)
+		c.Set("req", req)
+		return c.Render(200, r.HTML("users/recovery.html"))
 	}
 	go func(u *models.User) {
 		sender, ok := c.Value("recovery_sender").(Sender)
@@ -224,8 +224,9 @@ func UserRequestRecover(c buffalo.Context) error {
 			return errors.WithStack(err)
 		}
 		if verrs.HasAny() {
-			// TODO: fix this! should return properly
-			return errors.WithStack(verrs)
+			c.Set("errors", verrs)
+			c.Set("req", req)
+			return c.Render(200, r.HTML("users/recover.html"))
 		}
 	} else {
 		return c.Error(403, errors.New("email and recovery code do not match"))
