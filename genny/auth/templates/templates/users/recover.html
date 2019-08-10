@@ -21,7 +21,7 @@
 
     <%= form_for(req, {action: "/completeRecovery"}) { %>
       <%= f.InputTag("Email") %>
-      <%= f.InputTag("Code") %>
+      <%= f.InputTag("Code", {label: "Recovery Code"}) %>
       <%= f.InputTag("Password", {type: "password"}) %>
       <%= f.InputTag("PasswordConfirmation", {type: "password"}) %>
       
