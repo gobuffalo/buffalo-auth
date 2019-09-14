@@ -48,9 +48,9 @@ var _ = func() error {
 		b.SetResolver("migrations/create_users.up.fizz.plush", packr.Pointer{ForwardBox: gk, ForwardPath: "01efea4d6d4f2fb6b50ff6fcb970823d"})
 		b.SetResolver("models/user.go.plush", packr.Pointer{ForwardBox: gk, ForwardPath: "1fc930c75792016a1c02e707369c07ad"})
 		b.SetResolver("models/user_test.go.plush", packr.Pointer{ForwardBox: gk, ForwardPath: "d7cb14f200ed8706eae2ebb5882415d0"})
-		b.SetResolver("templates/auth/new.html", packr.Pointer{ForwardBox: gk, ForwardPath: "259d7197380562e655e1b260c90e3b18"})
-		b.SetResolver("templates/index.html", packr.Pointer{ForwardBox: gk, ForwardPath: "cbcf66c5bc866650aaf694ddd72aa6d9"})
-		b.SetResolver("templates/users/new.html", packr.Pointer{ForwardBox: gk, ForwardPath: "34e78888b9c1706ba3b6b9218a56b180"})
+		b.SetResolver("templates/auth/new.plush.html", packr.Pointer{ForwardBox: gk, ForwardPath: "259d7197380562e655e1b260c90e3b18"})
+		b.SetResolver("templates/index.plush.html", packr.Pointer{ForwardBox: gk, ForwardPath: "cbcf66c5bc866650aaf694ddd72aa6d9"})
+		b.SetResolver("templates/users/new.plush.html", packr.Pointer{ForwardBox: gk, ForwardPath: "34e78888b9c1706ba3b6b9218a56b180"})
 	}()
 
 	func() {
