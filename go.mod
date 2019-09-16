@@ -1,4 +1,4 @@
-module github.com/gobuffalo/buffalo-auth
+module github.com/BryanMoslo/buffalo-auth
 
 require (
 	github.com/fatih/structs v1.1.0 // indirect
