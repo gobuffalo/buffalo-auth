@@ -1,4 +1,4 @@
-module github.com/gobuffalo/buffalo-auth
+module github.com/BryanMoslo/buffalo-auth
 
 require (
 	github.com/fatih/structs v1.1.0 // indirect
@@ -12,6 +12,7 @@ require (
 	github.com/gobuffalo/packr/v2 v2.0.1
 	github.com/gobuffalo/plush v3.7.33+incompatible
 	github.com/gobuffalo/plushgen v0.0.0-20190224160205-347ea233336e
+	github.com/gobuffalo/tags v2.1.0+incompatible // indirect
 	github.com/gobuffalo/uuid v2.0.5+incompatible // indirect
 	github.com/gobuffalo/validate v2.0.3+incompatible // indirect
 	github.com/pkg/errors v0.8.1
