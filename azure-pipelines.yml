@@ -14,10 +14,10 @@ jobs:
       go 1.10:
         go_version: "1.10"
       go 1.11 (on):
-        go_version: "1.11"
+        go_version: "1.11.13"
         GO111MODULE: "on"
       go 1.11 (off):
-        go_version: "1.11"
+        go_version: "1.11.13"
         GO111MODULE: "off"
   steps:
     - template: azure-tests.yml
@@ -32,10 +32,10 @@ jobs:
       go 1.10:
         go_version: "1.10"
       go 1.11 (on):
-        go_version: "1.11"
+        go_version: "1.11.13"
         GO111MODULE: "on"
       go 1.11 (off):
-        go_version: "1.11"
+        go_version: "1.11.13"
         GO111MODULE: "off"
   steps:
     - template: azure-tests.yml
@@ -50,10 +50,10 @@ jobs:
       go 1.10:
         go_version: "1.10"
       go 1.11 (on):
-        go_version: "1.11"
+        go_version: "1.11.13"
         GO111MODULE: "on"
       go 1.11 (off):
-        go_version: "1.11"
+        go_version: "1.11.13"
         GO111MODULE: "off"
   steps:
     - template: azure-tests.yml
