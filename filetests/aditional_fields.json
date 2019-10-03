@@ -7,7 +7,7 @@
       "PhoneNumber"
     ]
 },{
-  "path": "templates/users/new.html",
+  "path": "templates/users/new.plush.html",
   "contains": [
     "<%= f.InputTag(\"FirstName\", {}) %>",
     "<%= f.InputTag(\"LastName\", {}) %>",
