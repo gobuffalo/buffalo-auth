@@ -60,6 +60,7 @@ func New(args []string) (*genny.Generator, error) {
 	ctx.Set("attrs", fields)
 
 	g.Transformer(plushgen.Transformer(ctx))
+	g.Transformer(genny.Replace(".html", ".plush.html"))
 	g.Transformer(genny.NewTransformer(".plush.html", newUserHTMLTransformer))
 	g.Transformer(genny.NewTransformer(".fizz", migrationsTransformer(time.Now())))
 
