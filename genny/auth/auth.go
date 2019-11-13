@@ -60,7 +60,8 @@ func New(args []string) (*genny.Generator, error) {
 	ctx.Set("attrs", fields)
 
 	g.Transformer(plushgen.Transformer(ctx))
-	g.Transformer(genny.NewTransformer(".plush.html", newUserHTMLTransformer))
+	g.Transformer(genny.NewTransformer(".html", newUserHTMLTransformer))
+	g.Transformer(genny.Replace(".html", ".plush.html"))
 	g.Transformer(genny.NewTransformer(".fizz", migrationsTransformer(time.Now())))
 
 	g.RunFn(func(r *genny.Runner) error {
@@ -91,7 +92,7 @@ func New(args []string) (*genny.Generator, error) {
 }
 
 func newUserHTMLTransformer(f genny.File) (genny.File, error) {
-	if f.Name() != filepath.Join("templates", "users", "new.plush.html") {
+	if f.Name() != filepath.Join("templates", "users", "new.html") {
 		return f, nil
 	}
 
