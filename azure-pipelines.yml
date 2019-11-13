@@ -9,12 +9,6 @@ jobs:
     vmImage: "vs2017-win2016"
   strategy:
     matrix:
-      go 1.11 (on):
-        go_version: "1.11.13"
-        GO111MODULE: "on"
-      go 1.11 (off):
-        go_version: "1.11.13"
-        GO111MODULE: "off"
       go 1.12 (on):
         go_version: "1.12"
         GO111MODULE: "on"
@@ -35,12 +29,6 @@ jobs:
     vmImage: "macOS-10.13"
   strategy:
     matrix:
-      go 1.11 (on):
-        go_version: "1.11.13"
-        GO111MODULE: "on"
-      go 1.11 (off):
-        go_version: "1.11.13"
-        GO111MODULE: "off"
       go 1.12 (on):
         go_version: "1.12"
         GO111MODULE: "on"
@@ -61,12 +49,6 @@ jobs:
     vmImage: "ubuntu-16.04"
   strategy:
     matrix:
-      go 1.11 (on):
-        go_version: "1.11.13"
-        GO111MODULE: "on"
-      go 1.11 (off):
-        go_version: "1.11.13"
-        GO111MODULE: "off"
       go 1.12 (on):
         go_version: "1.12"
         GO111MODULE: "on"
@@ -81,3 +63,12 @@ jobs:
         GO111MODULE: "off"
   steps:
     - template: azure-tests.yml
+
+- job: Integration
+  pool:
+    vmImage: "ubuntu-16.04"
+  steps:
+    - task: Docker@2
+      displayName: Integration
+      inputs:
+        command: build
