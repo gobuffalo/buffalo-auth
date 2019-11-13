@@ -64,7 +64,7 @@ jobs:
   steps:
     - template: azure-tests.yml
 
-- job: Linux
+- job: Integration
   pool:
     vmImage: "ubuntu-16.04"
   steps:
