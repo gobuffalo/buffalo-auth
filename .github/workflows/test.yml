@@ -19,3 +19,4 @@ jobs:
       run: |
         go mod tidy -v
         go test -race ./...
+    
