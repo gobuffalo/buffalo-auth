@@ -13,6 +13,11 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// AuthSignIn loads the signin page
+func AuthSignIn(c buffalo.Context) error {
+	return c.Render(200, r.HTML("/signin.plush.html"))
+}
+
 // AuthNew loads the signin page
 func AuthNew(c buffalo.Context) error {
 	c.Set("user", models.User{})

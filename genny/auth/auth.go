@@ -77,6 +77,7 @@ func New(args []string) (*genny.Generator, error) {
 			`if app == nil {`,
 			`app.Use(SetCurrentUser)`,
 			`app.Use(Authorize)`,
+			`app.GET("/auth", AuthSignIn)`,
 			`app.GET("/users/new", UsersNew)`,
 			`app.POST("/users", UsersCreate)`,
 			`app.GET("/signin", AuthNew)`,

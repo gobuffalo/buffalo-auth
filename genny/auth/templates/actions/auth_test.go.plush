@@ -4,6 +4,13 @@ import (
   "<%= app.PackagePkg %>/models"
 )
 
+func (as *ActionSuite) Test_Auth_Signin() {
+	res := as.HTML("/signin").Get()
+	as.Equal(200, res.Code)
+	as.Contains(res.Body.String(), "Sign In")
+	as.Contains(res.Body.String(), `<a href="/signout" data-method="DELETE">Sign Out</a>`)
+}
+
 func (as *ActionSuite) Test_Auth_New() {
 	res := as.HTML("/signin").Get()
 	as.Equal(200, res.Code)
