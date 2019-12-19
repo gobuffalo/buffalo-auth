@@ -13,9 +13,9 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// AuthSignIn loads the signin page
-func AuthSignIn(c buffalo.Context) error {
-	return c.Render(200, r.HTML("/signin.plush.html"))
+// AuthLanding shows a landing page to login
+func AuthLanding(c buffalo.Context) error {
+	return c.Render(200, r.HTML("auth/landing.plush.html"))
 }
 
 // AuthNew loads the signin page
@@ -38,11 +38,13 @@ func AuthCreate(c buffalo.Context) error {
 
 	// helper function to handle bad attempts
 	bad := func() error {
-		c.Set("user", u)
 		verrs := validate.NewErrors()
 		verrs.Add("email", "invalid email/password")
+
 		c.Set("errors", verrs)
-		return c.Render(422, r.HTML("auth/new.plush.html"))
+		c.Set("user", u)
+
+		return c.Render(http.StatusUnauthorized, r.HTML("auth/new.plush.html"))
 	}
 
 	if err != nil {
@@ -62,7 +64,7 @@ func AuthCreate(c buffalo.Context) error {
 	c.Flash().Add("success", "Welcome Back to Buffalo!")
 
 	redirectURL := "/"
-	if redir, ok := c.Session().Get("redirectURL").(string); ok {
+	if redir, ok := c.Session().Get("redirectURL").(string); ok && redir != "" {
 		redirectURL = redir
 	}
 
