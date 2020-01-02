@@ -20,21 +20,13 @@ func (as *ActionSuite) createUser() (*models.User, error) {
 func (as *ActionSuite) Test_Auth_Signin() {
 	res := as.HTML("/auth/").Get()
 	as.Equal(200, res.Code)
-	as.Contains(res.Body.String(), `<a href="/signin" class="btn btn-primary">Sign In</a>`)
+	as.Contains(res.Body.String(), `<a href="/auth/new/">Sign In</a>`)
 }
 
 func (as *ActionSuite) Test_Auth_New() {
 	res := as.HTML("/auth/new").Get()
 	as.Equal(200, res.Code)
 	as.Contains(res.Body.String(), "Sign In")
-}
-
-func (as *ActionSuite) Test_Auth_SaveRedirect() {
-	res := as.HTML("/").Get()
-	as.Equal(302, res.Code)
-
-	as.Equal("/auth", res.Location())
-	as.Equal(as.Session.Get("redirectURL"), "/")
 }
 
 func (as *ActionSuite) Test_Auth_Create() {
