@@ -10,7 +10,7 @@ import (
 	"github.com/gobuffalo/genny"
 	"github.com/gobuffalo/gogen"
 	"github.com/gobuffalo/meta"
-	"github.com/gobuffalo/packr"
+	"github.com/gobuffalo/packr/v2"
 	"github.com/gobuffalo/plush"
 	"github.com/gobuffalo/plushgen"
 	"github.com/pkg/errors"
@@ -51,7 +51,7 @@ func New(args []string) (*genny.Generator, error) {
 		return g, errors.WithStack(err)
 	}
 
-	if err := g.Box(packr.NewBox("../auth/templates")); err != nil {
+	if err := g.Box(packr.New("auth:templates", "../auth/templates")); err != nil {
 		return g, errors.WithStack(err)
 	}
 
