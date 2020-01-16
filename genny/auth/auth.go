@@ -7,12 +7,12 @@ import (
 	"time"
 
 	"github.com/gobuffalo/attrs"
-	"github.com/gobuffalo/genny"
-	"github.com/gobuffalo/gogen"
+	"github.com/gobuffalo/genny/v2"
+	"github.com/gobuffalo/genny/v2/gogen"
+	"github.com/gobuffalo/genny/v2/plushgen"
 	"github.com/gobuffalo/meta"
 	"github.com/gobuffalo/packr/v2"
 	"github.com/gobuffalo/plush"
-	"github.com/gobuffalo/plushgen"
 	"github.com/pkg/errors"
 )
 
