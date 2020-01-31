@@ -12,7 +12,7 @@ import (
 	"github.com/gobuffalo/genny/v2/plushgen"
 	"github.com/gobuffalo/meta"
 	"github.com/gobuffalo/packr/v2"
-	"github.com/gobuffalo/plush"
+	"github.com/gobuffalo/plush/v4"
 	"github.com/pkg/errors"
 )
 
