@@ -18,6 +18,17 @@
 <div class="auth-wrapper">
   <div class="sign-form">
     <h1>Register</h1>
+    
+    <%= if (errors) { %>
+      <%= for (key, val) in errors { %>
+        <div class="alert alert-danger alert-dismissible fade show m-1" role="alert">
+          <%= val %>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      <% } %>
+    <% } %>
 
     <%= form_for(user, {action: usersPath()}) { %>
       <%= f.InputTag("Email") %>
