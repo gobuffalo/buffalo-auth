@@ -83,7 +83,7 @@ func New(args []string) (*genny.Generator, error) {
 			`auth := app.Group("/auth")`,
 			`auth.GET("/", AuthLanding)`,
 			`auth.GET("/new", AuthNew)`,
-			`auth.POST("/", AuthCreate)`,
+			`auth.POST("/new", AuthCreate)`,
 			`auth.DELETE("/", AuthDestroy)`,
 			`auth.Middleware.Skip(Authorize, AuthLanding, AuthNew, AuthCreate)`,
 			``,
