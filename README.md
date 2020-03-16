@@ -62,7 +62,7 @@ This will do:
 Sometimes you would want to add extra fields to the user model, to do so, you can pass those to the auth command and use the pop notation for those fields, for example:
 
 ```bash
-$ buffalo generate auth first_name last_name phone_number notes:text
+$ buffalo generate auth first_name last_name notes:text
 ```
 
 Will generate a User model (inside `models/user.go`) that looks like:
