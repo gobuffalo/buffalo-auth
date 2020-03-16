@@ -13,9 +13,10 @@
 <div class="auth-center">
   <%= if (current_user) { %>
     <h1><%= current_user.Email %></h1>
-    <a href="/signout" data-method="DELETE">Sign Out</a>
+    <%= linkTo(authPath(), {data-method: "DELETE"}){ %>Sign Out<% } %>
   <% } else { %>
-    <a href="/signin" class="btn btn-primary">Sign In</a>
-    <a href="/users/new" class="btn btn-success">Register</a>
+    <%= linkTo(newAuthPath()){ %>Sign In<% } %>
+    <%= linkTo(newUsersPath()){ %>Register<% } %>
   <% } %>
 </div>
+

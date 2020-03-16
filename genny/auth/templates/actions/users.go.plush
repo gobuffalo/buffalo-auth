@@ -7,6 +7,7 @@ import (
 	"github.com/pkg/errors"
 )
 
+//UsersNew renders the users form
 func UsersNew(c buffalo.Context) error {
 	u := models.User{}
 	c.Set("user", u)
@@ -67,7 +68,7 @@ func Authorize(next buffalo.Handler) buffalo.Handler {
 			}
 
 			c.Flash().Add("danger", "You must be authorized to see that page")
-			return c.Redirect(302, "/")
+			return c.Redirect(302, "/auth/new")
 		}
 		return next(c)
 	}

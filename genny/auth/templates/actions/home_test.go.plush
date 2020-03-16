@@ -4,8 +4,8 @@ import "<%= app.PackagePkg %>/models"
 
 func (as *ActionSuite) Test_HomeHandler() {
 	res := as.HTML("/").Get()
-	as.Equal(200, res.Code)
-	as.Contains(res.Body.String(), "Sign In")
+	as.Equal(302, res.Code)
+	as.Equal(res.Location(), "/auth/new")
 }
 
 func (as *ActionSuite) Test_HomeHandler_LoggedIn() {
@@ -19,12 +19,12 @@ func (as *ActionSuite) Test_HomeHandler_LoggedIn() {
 	as.False(verrs.HasAny())
 	as.Session.Set("current_user_id", u.ID)
 
-	res := as.HTML("/").Get()
+	res := as.HTML("/auth").Get()
 	as.Equal(200, res.Code)
 	as.Contains(res.Body.String(), "Sign Out")
 
 	as.Session.Clear()
-	res = as.HTML("/").Get()
+	res = as.HTML("/auth").Get()
 	as.Equal(200, res.Code)
 	as.Contains(res.Body.String(), "Sign In")
 }

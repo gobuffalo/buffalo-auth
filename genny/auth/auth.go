@@ -7,12 +7,12 @@ import (
 	"time"
 
 	"github.com/gobuffalo/attrs"
-	"github.com/gobuffalo/genny"
-	"github.com/gobuffalo/gogen"
+	"github.com/gobuffalo/genny/v2"
+	"github.com/gobuffalo/genny/v2/gogen"
+	"github.com/gobuffalo/genny/v2/plushgen"
 	"github.com/gobuffalo/meta"
-	"github.com/gobuffalo/packr"
-	"github.com/gobuffalo/plush"
-	"github.com/gobuffalo/plushgen"
+	"github.com/gobuffalo/packr/v2"
+	"github.com/gobuffalo/plush/v4"
 	"github.com/pkg/errors"
 )
 
@@ -51,7 +51,7 @@ func New(args []string) (*genny.Generator, error) {
 		return g, errors.WithStack(err)
 	}
 
-	if err := g.Box(packr.NewBox("../auth/templates")); err != nil {
+	if err := g.Box(packr.New("auth:templates", "../auth/templates")); err != nil {
 		return g, errors.WithStack(err)
 	}
 
@@ -75,14 +75,24 @@ func New(args []string) (*genny.Generator, error) {
 		gf, err = gogen.AddInsideBlock(
 			gf,
 			`if app == nil {`,
+			`//AuthMiddlewares`,
 			`app.Use(SetCurrentUser)`,
 			`app.Use(Authorize)`,
-			`app.GET("/users/new", UsersNew)`,
-			`app.POST("/users", UsersCreate)`,
-			`app.GET("/signin", AuthNew)`,
-			`app.POST("/signin", AuthCreate)`,
-			`app.DELETE("/signout", AuthDestroy)`,
-			`app.Middleware.Skip(Authorize, HomeHandler, UsersNew, UsersCreate, AuthNew, AuthCreate)`,
+			``,
+			`//Routes for Auth`,
+			`auth := app.Group("/auth")`,
+			`auth.GET("/", AuthLanding)`,
+			`auth.GET("/new", AuthNew)`,
+			`auth.POST("/", AuthCreate)`,
+			`auth.DELETE("/", AuthDestroy)`,
+			`auth.Middleware.Skip(Authorize, AuthLanding, AuthNew, AuthCreate)`,
+			``,
+			`//Routes for User registration`,
+			`users := app.Group("/users")`,
+			`users.GET("/new", UsersNew)`,
+			`users.POST("/", UsersCreate)`,
+			`users.Middleware.Remove(Authorize)`,
+			``,
 		)
 
 		return r.File(gf)

@@ -1,6 +1,5 @@
-  
 name: Tests
-on: [push]
+on: [push, pull_request]
 jobs:
 
   tests-on:
@@ -19,4 +18,5 @@ jobs:
       run: |
         go mod tidy -v
         go test -race ./...
-    
+
+
