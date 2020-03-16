@@ -43,6 +43,8 @@ func AuthCreate(c buffalo.Context) error {
 
 		c.Set("errors", verrs)
 		c.Set("user", u)
+		
+		c.Flash().Add("danger", "invalid email/password")
 
 		return c.Render(http.StatusUnauthorized, r.HTML("auth/new.plush.html"))
 	}
