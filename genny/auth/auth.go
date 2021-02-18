@@ -56,7 +56,8 @@ func New(args []string) (*genny.Generator, error) {
 	}
 
 	ctx := plush.NewContext()
-	ctx.Set("app", meta.New("."))
+	a := meta.New(".")
+	ctx.Set("app", a)
 	ctx.Set("attrs", fields)
 
 	g.Transformer(plushgen.Transformer(ctx))
