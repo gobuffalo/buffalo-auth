@@ -1,7 +1,9 @@
 package auth
 
 import (
+	"embed"
 	"fmt"
+	"io/fs"
 	"path/filepath"
 	"strings"
 	"time"
@@ -11,10 +13,12 @@ import (
 	"github.com/gobuffalo/genny/v2/gogen"
 	"github.com/gobuffalo/genny/v2/plushgen"
 	"github.com/gobuffalo/meta"
-	"github.com/gobuffalo/packr/v2"
 	"github.com/gobuffalo/plush/v4"
 	"github.com/pkg/errors"
 )
+
+//go:embed templates
+var templates embed.FS
 
 func extraAttrs(args []string) []string {
 	var names = map[string]string{
@@ -51,7 +55,11 @@ func New(args []string) (*genny.Generator, error) {
 		return g, errors.WithStack(err)
 	}
 
-	if err := g.Box(packr.New("auth:templates", "../auth/templates")); err != nil {
+	sub, err := fs.Sub(templates, "templates")
+	if err != nil {
+		return g, errors.WithStack(err)
+	}
+	if err := g.FS(sub); err != nil {
 		return g, errors.WithStack(err)
 	}
 
@@ -94,6 +102,9 @@ func New(args []string) (*genny.Generator, error) {
 			`users.Middleware.Remove(Authorize)`,
 			``,
 		)
+		if err != nil {
+			return errors.WithStack(err)
+		}
 
 		return r.File(gf)
 	})
@@ -109,7 +120,7 @@ func newUserHTMLTransformer(f genny.File) (genny.File, error) {
 	fieldInputs := []string{}
 	for _, field := range fields {
 		name := field.Name.Proper()
-		fieldInputs = append(fieldInputs, fmt.Sprintf(`<%%= f.InputTag("%v", {}) %%>`, name))
+		fieldInputs = append(fieldInputs, fmt.Sprintf(`      <%%= f.InputTag("%v", {}) %%>`, name))
 	}
 
 	lines := strings.Split(f.String(), "\n")

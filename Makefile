@@ -1,18 +1,18 @@
+GO_BIN ?= go
+
 test:
-	packr2 clean
-	go test -failfast -short -cover ./...
-	packr2
-	go mod tidy -v
+	$(GO_BIN) test -failfast -short -cover ./...
+	$(GO_BIN) mod tidy -v
 
 cov:
-	packr2 clean
-	go test -short -coverprofile cover.out ./...
-	go tool cover -html cover.out
-	packr2
-	go mod tidy -v
+	$(GO_BIN) test -short -coverprofile cover.out ./...
+	$(GO_BIN) tool cover -html cover.out
+	$(GO_BIN) mod tidy -v
 
 install:
-	packr2 clean
-	packr2
-	go install -v .
+	$(GO_BIN) install -v .
 
+
+build:
+	$(GO_BIN) build -v .
+	$(GO_BIN) mod tidy
