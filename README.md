@@ -1,20 +1,14 @@
 <p align="center"><img src="https://github.com/gobuffalo/buffalo/blob/master/logo.svg" width="360"></p>
 
-<p align="center">
-  <a href="https://godoc.org/github.com/gobuffalo/buffalo-auth"><img src="https://godoc.org/github.com/gobuffalo/buffalo-auth?status.svg" alt="GoDoc"></a>
-  <a href="https://travis-ci.org/gobuffalo/buffalo-auth"><img src="https://travis-ci.org/gobuffalo/buffalo-auth.svg?branch=master" alt="Build Status"></a>
-  <a href="https://goreportcard.com/report/github.com/gobuffalo/buffalo-auth"><img src="https://goreportcard.com/badge/github.com/gobuffalo/buffalo-auth" alt="Go Report Card" /></a>
-</p>
-
-
-
 # Auth Generator for Buffalo
 
+[![Tests](https://github.com/gobuffalo/buffalo-auth/actions/workflows/tests.yml/badge.svg)](https://github.com/gobuffalo/buffalo-auth/actions/workflows/tests.yml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/gobuffalo/buffalo-auth.svg)](https://pkg.go.dev/github.com/gobuffalo/buffalo-auth)
+[![Go Report Card](https://goreportcard.com/badge/github.com/gobuffalo/buffalo-auth)](https://goreportcard.com/report/github.com/gobuffalo/buffalo-auth)
 
 ## Installation
 
-```bash
-$ go get -u github.com/gobuffalo/buffalo-auth
+```console
 $ buffalo plugins install github.com/gobuffalo/buffalo-auth
 ```
 
@@ -22,7 +16,7 @@ $ buffalo plugins install github.com/gobuffalo/buffalo-auth
 
 To generate a basic username / password authentication you can run:
 
-```bash
+```console
 $ buffalo generate auth
 ```
 
@@ -61,7 +55,7 @@ This will do:
 
 Sometimes you would want to add extra fields to the user model, to do so, you can pass those to the auth command and use the pop notation for those fields, for example:
 
-```bash
+```console
 $ buffalo generate auth first_name last_name notes:text
 ```
 
