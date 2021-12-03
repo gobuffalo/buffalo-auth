@@ -1,7 +1,9 @@
 package actions
 
 import (
-  "<%= app.PackagePkg %>/models"
+	"net/http"
+
+	"<%= app.PackagePkg %>/models"
 )
 
 func (as *ActionSuite) createUser() (*models.User, error) {

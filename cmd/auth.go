@@ -6,6 +6,7 @@ import (
 	"github.com/gobuffalo/buffalo-auth/genny/auth"
 	"github.com/gobuffalo/genny/v2"
 	"github.com/gobuffalo/genny/v2/gogen"
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
@@ -22,11 +23,11 @@ var authCmd = &cobra.Command{
 		}
 
 		if err := r.WithNew(auth.New(args)); err != nil {
-			return err
+			return errors.WithStack(err)
 		}
 
 		if err := r.WithNew(gogen.Fmt(r.Root)); err != nil {
-			return err
+			return errors.WithStack(err)
 		}
 
 		return r.Run()

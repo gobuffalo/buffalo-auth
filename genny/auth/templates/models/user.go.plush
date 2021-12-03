@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/gobuffalo/pop"
+	"github.com/gobuffalo/pop/v6"
+	"github.com/gobuffalo/validate/v3"
+	"github.com/gobuffalo/validate/v3/validators"
 	"github.com/gofrs/uuid"
-	"github.com/gobuffalo/validate"
-	"github.com/gobuffalo/validate/validators"
 )
 
 //User is a generated model from buffalo-auth, it serves as the base for username/password authentication.
@@ -22,8 +22,7 @@ type User struct {
 	PasswordConfirmation string    `json:"-" db:"-"`
     <%= if( len(attrs) > 0) { %>
         //Extra fields
-        <%= for (attr) in attrs { %> 
-        <%= attr.Name.Proper() %> <%= attr.GoType() %> `json:"<%= attr.Name.Underscore() %>" db:"<%= attr.Name.Underscore() %>"`
+        <%= for (attr) in attrs { %><%= attr.Name.Proper() %> <%= attr.GoType() %> `json:"<%= attr.Name.Underscore() %>" db:"<%= attr.Name.Underscore() %>"`
         <% } %>
     <% } %>
 }
