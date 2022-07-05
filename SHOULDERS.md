@@ -4,35 +4,57 @@ github.com/gobuffalo/buffalo-auth does not try to reinvent the wheel! Instead, i
 
 Thank you to the following **GIANTS**:
 
-
+* [github.com/BurntSushi/toml](https://godoc.org/github.com/BurntSushi/toml)
+* [github.com/aymerick/douceur](https://godoc.org/github.com/aymerick/douceur)
+* [github.com/cpuguy83/go-md2man/v2](https://godoc.org/github.com/cpuguy83/go-md2man/v2)
+* [github.com/davecgh/go-spew](https://godoc.org/github.com/davecgh/go-spew)
 * [github.com/fatih/structs](https://godoc.org/github.com/fatih/structs)
-
 * [github.com/gobuffalo/attrs](https://godoc.org/github.com/gobuffalo/attrs)
-
-* [github.com/gobuffalo/buffalo-plugins](https://godoc.org/github.com/gobuffalo/buffalo-plugins)
-
-* [github.com/gobuffalo/genny](https://godoc.org/github.com/gobuffalo/genny)
-
+* [github.com/gobuffalo/envy](https://godoc.org/github.com/gobuffalo/envy)
+* [github.com/gobuffalo/flect](https://godoc.org/github.com/gobuffalo/flect)
+* [github.com/gobuffalo/genny/v2](https://godoc.org/github.com/gobuffalo/genny/v2)
 * [github.com/gobuffalo/github_flavored_markdown](https://godoc.org/github.com/gobuffalo/github_flavored_markdown)
-
-* [github.com/gobuffalo/gogen](https://godoc.org/github.com/gobuffalo/gogen)
-
+* [github.com/gobuffalo/helpers](https://godoc.org/github.com/gobuffalo/helpers)
+* [github.com/gobuffalo/logger](https://godoc.org/github.com/gobuffalo/logger)
 * [github.com/gobuffalo/meta](https://godoc.org/github.com/gobuffalo/meta)
-
-* [github.com/gobuffalo/packr](https://godoc.org/github.com/gobuffalo/packr)
-
-* [github.com/gobuffalo/packr/v2](https://godoc.org/github.com/gobuffalo/packr/v2)
-
-* [github.com/gobuffalo/plush](https://godoc.org/github.com/gobuffalo/plush)
-
-* [github.com/gobuffalo/plushgen](https://godoc.org/github.com/gobuffalo/plushgen)
-
-* [github.com/gobuffalo/uuid](https://godoc.org/github.com/gobuffalo/uuid)
-
-* [github.com/gobuffalo/validate](https://godoc.org/github.com/gobuffalo/validate)
-
+* [github.com/gobuffalo/packd](https://godoc.org/github.com/gobuffalo/packd)
+* [github.com/gobuffalo/plush/v4](https://godoc.org/github.com/gobuffalo/plush/v4)
+* [github.com/gobuffalo/tags/v3](https://godoc.org/github.com/gobuffalo/tags/v3)
+* [github.com/gobuffalo/validate/v3](https://godoc.org/github.com/gobuffalo/validate/v3)
+* [github.com/gofrs/uuid](https://godoc.org/github.com/gofrs/uuid)
+* [github.com/gorilla/css](https://godoc.org/github.com/gorilla/css)
+* [github.com/inconshreveable/mousetrap](https://godoc.org/github.com/inconshreveable/mousetrap)
+* [github.com/joho/godotenv](https://godoc.org/github.com/joho/godotenv)
+* [github.com/kr/pretty](https://godoc.org/github.com/kr/pretty)
+* [github.com/kr/pty](https://godoc.org/github.com/kr/pty)
+* [github.com/kr/text](https://godoc.org/github.com/kr/text)
+* [github.com/markbates/oncer](https://godoc.org/github.com/markbates/oncer)
+* [github.com/markbates/safe](https://godoc.org/github.com/markbates/safe)
+* [github.com/microcosm-cc/bluemonday](https://godoc.org/github.com/microcosm-cc/bluemonday)
+* [github.com/pkg/diff](https://godoc.org/github.com/pkg/diff)
 * [github.com/pkg/errors](https://godoc.org/github.com/pkg/errors)
-
-* [github.com/serenize/snaker](https://godoc.org/github.com/serenize/snaker)
-
+* [github.com/pmezard/go-difflib](https://godoc.org/github.com/pmezard/go-difflib)
+* [github.com/rogpeppe/go-internal](https://godoc.org/github.com/rogpeppe/go-internal)
+* [github.com/russross/blackfriday/v2](https://godoc.org/github.com/russross/blackfriday/v2)
+* [github.com/sergi/go-diff](https://godoc.org/github.com/sergi/go-diff)
+* [github.com/sirupsen/logrus](https://godoc.org/github.com/sirupsen/logrus)
+* [github.com/sourcegraph/annotate](https://godoc.org/github.com/sourcegraph/annotate)
+* [github.com/sourcegraph/syntaxhighlight](https://godoc.org/github.com/sourcegraph/syntaxhighlight)
 * [github.com/spf13/cobra](https://godoc.org/github.com/spf13/cobra)
+* [github.com/spf13/pflag](https://godoc.org/github.com/spf13/pflag)
+* [github.com/stretchr/objx](https://godoc.org/github.com/stretchr/objx)
+* [github.com/stretchr/testify](https://godoc.org/github.com/stretchr/testify)
+* [github.com/yuin/goldmark](https://godoc.org/github.com/yuin/goldmark)
+* [golang.org/x/crypto](https://godoc.org/golang.org/x/crypto)
+* [golang.org/x/mod](https://godoc.org/golang.org/x/mod)
+* [golang.org/x/net](https://godoc.org/golang.org/x/net)
+* [golang.org/x/sync](https://godoc.org/golang.org/x/sync)
+* [golang.org/x/sys](https://godoc.org/golang.org/x/sys)
+* [golang.org/x/term](https://godoc.org/golang.org/x/term)
+* [golang.org/x/text](https://godoc.org/golang.org/x/text)
+* [golang.org/x/tools](https://godoc.org/golang.org/x/tools)
+* [golang.org/x/xerrors](https://godoc.org/golang.org/x/xerrors)
+* [gopkg.in/check.v1](https://godoc.org/gopkg.in/check.v1)
+* [gopkg.in/errgo.v2](https://godoc.org/gopkg.in/errgo.v2)
+* [gopkg.in/yaml.v2](https://godoc.org/gopkg.in/yaml.v2)
+* [gopkg.in/yaml.v3](https://godoc.org/gopkg.in/yaml.v3)
