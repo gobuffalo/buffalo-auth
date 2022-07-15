@@ -1,15 +1,13 @@
-<p align="center"><img src="https://github.com/gobuffalo/buffalo/blob/master/logo.svg" width="360"></p>
-
 # Auth Generator for Buffalo
 
-[![Tests](https://github.com/gobuffalo/buffalo-auth/actions/workflows/tests.yml/badge.svg)](https://github.com/gobuffalo/buffalo-auth/actions/workflows/tests.yml)
+[![Standard Test](https://github.com/gobuffalo/buffalo-auth/actions/workflows/standard-go-test.yml/badge.svg)](https://github.com/gobuffalo/buffalo-auth/actions/workflows/standard-go-test.yml)
 [![Go Reference](https://pkg.go.dev/badge/github.com/gobuffalo/buffalo-auth.svg)](https://pkg.go.dev/github.com/gobuffalo/buffalo-auth)
 [![Go Report Card](https://goreportcard.com/badge/github.com/gobuffalo/buffalo-auth)](https://goreportcard.com/report/github.com/gobuffalo/buffalo-auth)
 
 ## Installation
 
 ```console
-$ buffalo plugins install github.com/gobuffalo/buffalo-auth
+$ buffalo plugins install github.com/gobuffalo/buffalo-auth@latest
 ```
 
 ## Usage
