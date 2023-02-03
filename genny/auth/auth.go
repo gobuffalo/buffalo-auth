@@ -80,6 +80,9 @@ func New(args []string) (*genny.Generator, error) {
 		}
 
 		expressions := []string{
+			``,
+			`// NOTE: this block should go before any resources`,
+			`// that need to be protected by buffalo-goth!`,
 			`//AuthMiddlewares`,
 			`app.Use(SetCurrentUser)`,
 			`app.Use(Authorize)`,
