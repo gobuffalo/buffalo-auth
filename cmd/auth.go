@@ -2,11 +2,11 @@ package cmd
 
 import (
 	"context"
+	"os/exec"
 
 	"github.com/gobuffalo/buffalo-auth/genny/auth"
 	"github.com/gobuffalo/genny/v2"
 	"github.com/gobuffalo/genny/v2/gogen"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
@@ -23,12 +23,17 @@ var authCmd = &cobra.Command{
 		}
 
 		if err := r.WithNew(auth.New(args)); err != nil {
-			return errors.WithStack(err)
+			return err
 		}
 
 		if err := r.WithNew(gogen.Fmt(r.Root)); err != nil {
-			return errors.WithStack(err)
+			return err
 		}
+
+		gomodtidy := exec.Command("go", "mod", "tidy")
+		g := genny.New()
+		g.Command(gomodtidy)
+		r.With(g)
 
 		return r.Run()
 	},

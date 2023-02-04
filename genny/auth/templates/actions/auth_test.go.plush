@@ -14,20 +14,21 @@ func (as *ActionSuite) createUser() (*models.User, error) {
 	}
 
 	verrs, err := u.Create(as.DB)
-	as.False(verrs.HasAny())
+	as.NoError(err)
+	as.False(verrs.HasAny(), "validation error: %v", verrs)
 
 	return u, err
 }
 
 func (as *ActionSuite) Test_Auth_Signin() {
 	res := as.HTML("/auth/").Get()
-	as.Equal(200, res.Code)
+	as.Equal(http.StatusOK, res.Code)
 	as.Contains(res.Body.String(), `<a href="/auth/new/">Sign In</a>`)
 }
 
 func (as *ActionSuite) Test_Auth_New() {
 	res := as.HTML("/auth/new").Get()
-	as.Equal(200, res.Code)
+	as.Equal(http.StatusOK, res.Code)
 	as.Contains(res.Body.String(), "Sign In")
 }
 
@@ -82,7 +83,7 @@ func (as *ActionSuite) Test_Auth_Redirect() {
 
 			res := as.HTML("/auth").Post(u)
 
-			as.Equal(302, res.Code)
+			as.Equal(http.StatusFound, res.Code)
 			as.Equal(res.Location(), tcase.resultLocation)
 		})
 	}
