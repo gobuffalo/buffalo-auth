@@ -51,7 +51,12 @@ func SetCurrentUser(next buffalo.Handler) buffalo.Handler {
 			tx := c.Value("tx").(*pop.Connection)
 			err := tx.Find(u, uid)
 			if err != nil {
-				return errors.WithStack(err)
+				c.Logger().Warnf("user attempted to access with current_user_id '%v' that is not found: %v", uid, err)
+
+				c.Session().Delete("current_user_id")
+				c.Session().Set("redirectURL", c.Request().URL.String())
+				c.Flash().Add("danger", "You must be authorized with a correct user to see that page")
+				return c.Redirect(http.StatusFound, "/auth/new")
 			}
 			c.Set("current_user", u)
 		}
