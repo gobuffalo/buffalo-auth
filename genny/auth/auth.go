@@ -3,6 +3,7 @@ package auth
 import (
 	"embed"
 	"fmt"
+	"html/template"
 	"io/fs"
 	"path/filepath"
 	"strings"
@@ -29,13 +30,13 @@ func extraAttrs(args []string) []string {
 	var result = []string{}
 	for _, field := range args {
 		at, _ := attrs.Parse(field)
-		field = at.Name.Underscore().String()
+		name := at.Name.Underscore().String()
 
-		if names[field] != "" {
+		if names[name] != "" {
 			continue
 		}
 
-		names[field] = field
+		names[name] = name
 		result = append(result, field)
 	}
 
@@ -65,6 +66,12 @@ func New(args []string) (*genny.Generator, error) {
 	ctx := plush.NewContext()
 	ctx.Set("app", meta.New("."))
 	ctx.Set("attrs", fields)
+	ctx.Set("option", func(attr attrs.Attr) template.HTML {
+		if strings.HasPrefix(attr.GoType(), "nulls.") {
+			return "\"null\": true"
+		}
+		return ""
+	})
 
 	g.Transformer(plushgen.Transformer(ctx))
 	g.Transformer(genny.NewTransformer(".html", newUserHTMLTransformer))
